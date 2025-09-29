@@ -1,0 +1,50 @@
+import '../../../config/app_config.dart';
+
+class CreatePostTabButton extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const CreatePostTabButton({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color:
+          selected ? AppColors.textColor4.withOpacity(1) : Colors.transparent,
+      borderRadius: BorderRadius.circular(10),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          alignment: Alignment.center,
+          height: 32,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: selected
+                  ? Colors.transparent
+                  : AppColors.primaryColor.withOpacity(0.32),
+              width: 1.3,
+            ),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              color: selected
+                  ? AppColors.whiteColor
+                  : AppColors.whiteColor.withOpacity(0.5),
+              fontFamily: GoogleFonts.inter().fontFamily,
+              fontSize: FontDimen.dimen11,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

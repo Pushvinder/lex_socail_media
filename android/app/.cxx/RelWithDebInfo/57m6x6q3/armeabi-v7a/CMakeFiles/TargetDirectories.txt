@@ -1,0 +1,2 @@
+E:/AlliedProjects/The Friendz Zone/The Friendz Zone/android/app/.cxx/RelWithDebInfo/57m6x6q3/armeabi-v7a/CMakeFiles/edit_cache.dir
+E:/AlliedProjects/The Friendz Zone/The Friendz Zone/android/app/.cxx/RelWithDebInfo/57m6x6q3/armeabi-v7a/CMakeFiles/rebuild_cache.dir

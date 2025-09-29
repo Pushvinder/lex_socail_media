@@ -1,0 +1,15 @@
+class CommunityModel {
+  final String name;
+  final String description;
+  final String rules;
+  final String category;
+  final String? imagePath;
+  
+  CommunityModel({
+    required this.name,
+    required this.description,
+    required this.rules,
+    required this.category,
+    this.imagePath,
+  });
+}

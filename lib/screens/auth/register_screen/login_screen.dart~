@@ -1,0 +1,610 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../../../controllers/select_user_controller.dart';
+import '../../../utils/app_colors.dart';
+import '../../../utils/app_dimen.dart';
+import '../../../utils/app_fonts.dart';
+import '../../../utils/app_img.dart';
+import '../../../utils/app_strings.dart';
+import '../../../widgets/app_textfield/app_textfield.dart';
+import '../../../widgets/dashed_line.dart';
+import '../../../widgets/social_button.dart';
+import '../forgot_pass_screen/forgot_pass_screen.dart';
+import 'login_controller.dart';
+
+class LoginScreen extends GetView<AuthController> {
+  const LoginScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    SelectUserController userController = Get.find<SelectUserController>();
+    return Scaffold(
+      backgroundColor: AppColors.scaffoldBackgroundColor,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 50),
+
+              // Title Section
+              Obx(
+                () => controller.selectedLoginMode.value == 0
+                    ? Column(
+                        children: [
+                          Text(
+                            AppStrings.hopIn,
+                            style: TextStyle(
+                              color: AppColors.primaryColor.withOpacity(1),
+                              fontSize: FontDimen.dimen16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: GoogleFonts.inter().fontFamily,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            AppStrings.loginBookRide,
+                            style: TextStyle(
+                              color: AppColors.textColor.withOpacity(0.80),
+                              fontSize: FontDimen.dimen16,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: GoogleFonts.inter().fontFamily,
+                            ),
+                          ),
+                        ],
+                      )
+                    : Column(
+                        children: [
+                          Text(
+                            AppStrings.joinRide,
+                            style: TextStyle(
+                              color: AppColors.primaryColor.withOpacity(1),
+                              fontSize: FontDimen.dimen16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: GoogleFonts.inter().fontFamily,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            AppStrings.signUpGetMoving,
+                            style: TextStyle(
+                              color: AppColors.textColor.withOpacity(0.80),
+                              fontSize: FontDimen.dimen16,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: GoogleFonts.inter().fontFamily,
+                            ),
+                          ),
+                        ],
+                      ),
+              ),
+
+              const SizedBox(height: 30),
+
+              // User Type Section
+              Obx(
+                () => Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Flexible(
+                    //   child: FittedBox(
+                    //     fit: BoxFit.contain,
+                    //     child: Image.asset(
+                    //       userController.userType.value == UserType.driver
+                    //           ? AppImages.driver
+                    //           : AppImages.rider,
+                    //       height: AppDimens.dimen30,
+                    //       width: AppDimens.dimen30,
+                    //       fit: BoxFit.cover,
+                    //     ),
+                    //   ),
+                    // ),
+                    const SizedBox(width: 5),
+                    Text(
+                      userController.userType.value == UserType.driver
+                          ? AppStrings.driver
+                          : AppStrings.rider,
+                      style: TextStyle(
+                        color: userController.userType.value == UserType.driver
+                            ? AppColors.textColor
+                            : AppColors.textColor,
+                        fontSize: FontDimen.dimen16,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: AppFonts.appFont,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 30),
+
+              // Login/Register Toggle
+              Obx(
+                () => Wrap(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor.withOpacity(0.05),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => controller.setSelectedLoginMode(0),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 13,
+                                    horizontal: 50,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color:
+                                        controller.selectedLoginMode.value == 0
+                                            ? AppColors.primaryColor
+                                            : AppColors.transparent,
+                                  ),
+                                  child: Text(
+                                    AppStrings.login,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: controller
+                                                  .selectedLoginMode.value ==
+                                              0
+                                          ? AppColors.scaffoldBackgroundColor
+                                          : AppColors.textColor
+                                              .withOpacity(0.50),
+                                      fontSize: FontDimen.dimen16,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: AppFonts.appFont,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => controller.setSelectedLoginMode(1),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 13,
+                                    horizontal: 50,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color:
+                                        controller.selectedLoginMode.value == 1
+                                            ? AppColors.primaryColor
+                                            : AppColors.transparent,
+                                  ),
+                                  child: Text(
+                                    AppStrings.register,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: controller
+                                                  .selectedLoginMode.value ==
+                                              1
+                                          ? AppColors.scaffoldBackgroundColor
+                                          : AppColors.textColor
+                                              .withOpacity(0.50),
+                                      fontSize: FontDimen.dimen16,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: AppFonts.appFont,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 40),
+
+              // Full Name TextField (only in Register mode)
+              Obx(
+                () => controller.selectedLoginMode.value == 1
+                    ? Column(
+                        children: [
+                          AppTextField(
+                            hintText: "Full name",
+                            controller: controller.fullNameController,
+                            keyboardType: TextInputType.name,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your full name';
+                              }
+                              return null;
+                            },
+                            suffixIcon: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 15),
+                              child: SizedBox(
+                                height: AppDimens.dimen18,
+                                width: AppDimens.dimen18,
+                                child: Image.asset(
+                                  AppImages.profile,
+                                  height: AppDimens.dimen18,
+                                  width: AppDimens.dimen18,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                            hintStyle: TextStyle(
+                              color: AppColors.textColor.withOpacity(0.5),
+                              fontSize: FontDimen.dimen13,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: GoogleFonts.inter().fontFamily,
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 16,
+                              horizontal: 16,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      )
+                    : const SizedBox.shrink(),
+              ),
+
+              // Email TextField
+              Obx(
+                () => Column(
+                  children: [
+                    controller.selectedLoginMode.value == 0
+                        ? AppTextField(
+                            hintText: AppStrings.emailAddress,
+                            controller: controller.loginEmailController,
+                            keyboardType: TextInputType.emailAddress,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your email';
+                              }
+                              return null;
+                            },
+                            suffixIcon: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 15),
+                              child: SizedBox(
+                                height: AppDimens.dimen18,
+                                width: AppDimens.dimen18,
+                                child: Image.asset(
+                                  AppImages.email,
+                                  height: AppDimens.dimen18,
+                                  width: AppDimens.dimen18,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                            hintStyle: TextStyle(
+                              color: AppColors.textColor.withOpacity(0.5),
+                              fontSize: FontDimen.dimen13,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: GoogleFonts.inter().fontFamily,
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 16,
+                              horizontal: 16,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          )
+                        : AppTextField(
+                            hintText: AppStrings.emailAddress,
+                            controller: controller.emailController,
+                            keyboardType: TextInputType.emailAddress,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your email';
+                              }
+                              return null;
+                            },
+                            suffixIcon: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 15),
+                              child: SizedBox(
+                                height: AppDimens.dimen18,
+                                width: AppDimens.dimen18,
+                                child: Image.asset(
+                                  AppImages.email,
+                                  height: AppDimens.dimen18,
+                                  width: AppDimens.dimen18,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                            hintStyle: TextStyle(
+                              color: AppColors.textColor.withOpacity(0.5),
+                              fontSize: FontDimen.dimen13,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: GoogleFonts.inter().fontFamily,
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 16,
+                              horizontal: 16,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Phone Number TextField (only in Register mode)
+              // Obx(
+              //   () => controller.selectedLoginMode.value == 1
+              //       ? Column(
+              //           children: [
+              //             AppTextField(
+              //               hintText: "Phone number",
+              //               controller: controller.phoneNumberController,
+              //               keyboardType: TextInputType.phone,
+              //               validator: (value) {
+              //                 if (value == null || value.isEmpty) {
+              //                   return 'Please enter your phone number';
+              //                 }
+              //                 return null;
+              //               },
+              //               prefixIcon: Padding(
+              //                 padding: const EdgeInsets.symmetric(
+              //                     horizontal: 15, vertical: 15),
+              //                 child: Text(
+              //                   "+1",
+              //                   style: TextStyle(
+              //                     color: AppColors.textColor.withOpacity(0.5),
+              //                     fontSize: FontDimen.dimen13,
+              //                     fontWeight: FontWeight.w400,
+              //                     fontFamily: GoogleFonts.inter().fontFamily,
+              //                   ),
+              //                 ),
+              //               ),
+              //               suffixIcon: Padding(
+              //                 padding: const EdgeInsets.symmetric(
+              //                     horizontal: 15, vertical: 15),
+              //                 child: SizedBox(
+              //                   height: AppDimens.dimen18,
+              //                   width: AppDimens.dimen18,
+              //                   child: Image.asset(
+              //                     AppImages.phoneCall,
+              //                     height: AppDimens.dimen18,
+              //                     width: AppDimens.dimen18,
+              //                     fit: BoxFit.contain,
+              //                   ),
+              //                 ),
+              //               ),
+              //               hintStyle: TextStyle(
+              //                 color: AppColors.textColor.withOpacity(0.5),
+              //                 fontSize: FontDimen.dimen13,
+              //                 fontWeight: FontWeight.w400,
+              //                 fontFamily: GoogleFonts.inter().fontFamily,
+              //               ),
+              //               contentPadding: const EdgeInsets.symmetric(
+              //                 vertical: 16,
+              //                 horizontal: 16,
+              //               ),
+              //               borderRadius: BorderRadius.circular(10),
+              //             ),
+              //             const SizedBox(height: 20),
+              //           ],
+              //         )
+              //       : const SizedBox.shrink(),
+              // ),
+
+              // Password TextField
+              Obx(
+                () => Column(
+                  children: [
+                    controller.selectedLoginMode.value == 0
+                        ? AppTextField(
+                            hintText: AppStrings.password,
+                            controller: controller.loginPasswordController,
+                            obscureText: true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your password';
+                              }
+                              return null;
+                            },
+                            hintStyle: TextStyle(
+                              color: AppColors.textColor.withOpacity(0.5),
+                              fontSize: FontDimen.dimen13,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: GoogleFonts.inter().fontFamily,
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 16,
+                              horizontal: 16,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          )
+                        : AppTextField(
+                            hintText: AppStrings.password,
+                            controller: controller.passwordController,
+                            obscureText: true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your password';
+                              }
+                              return null;
+                            },
+                            hintStyle: TextStyle(
+                              color: AppColors.textColor.withOpacity(0.5),
+                              fontSize: FontDimen.dimen13,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: GoogleFonts.inter().fontFamily,
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 16,
+                              horizontal: 16,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          )
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Confirm Password TextField (only in Register mode)
+              Obx(
+                () => controller.selectedLoginMode.value == 1
+                    ? Column(
+                        children: [
+                          AppTextField(
+                            hintText: "Confirm password",
+                            controller: controller.confirmPasswordController,
+                            obscureText: true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please confirm your password';
+                              }
+                              if (value != controller.passwordController.text) {
+                                return 'Passwords do not match';
+                              }
+                              return null;
+                            },
+                            hintStyle: TextStyle(
+                              color: AppColors.textColor.withOpacity(0.5),
+                              fontSize: FontDimen.dimen13,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: GoogleFonts.inter().fontFamily,
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 16,
+                              horizontal: 16,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      )
+                    : const SizedBox.shrink(),
+              ),
+
+              // Login/Register Button
+              Obx(
+                () => SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => controller.selectedLoginMode.value == 0
+                        ? controller.login()
+                        : controller.register(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor,
+                      padding: const EdgeInsets.symmetric(vertical: 17),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: Text(
+                      controller.selectedLoginMode.value == 0
+                          ? AppStrings.login
+                          : AppStrings.register,
+                      style: TextStyle(
+                        color: AppColors.scaffoldBackgroundColor,
+                        fontSize: FontDimen.dimen15,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: GoogleFonts.inter().fontFamily,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              // Forgot Password (only in Login mode)
+              Obx(
+                () => controller.selectedLoginMode.value == 0
+                    ? TextButton(
+                        onPressed: () {
+                          Get.to(const ForgotPasswordScreen());
+                        },
+                        child: Text(
+                          AppStrings.forgotPassword,
+                          style: TextStyle(
+                            color: AppColors.textColor.withOpacity(0.5),
+                            fontSize: FontDimen.dimen12,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: GoogleFonts.inter().fontFamily,
+                          ),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+              ),
+
+              const SizedBox(height: 10),
+
+              // Social Login Options
+              Row(
+                children: [
+                  Expanded(
+                    child: DashedLine(
+                      height: 1,
+                      color: AppColors.textColor.withOpacity(0.1),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(
+                      AppStrings.orLoginWith,
+                      style: TextStyle(
+                        color: AppColors.textColor.withOpacity(0.7),
+                        fontSize: FontDimen.dimen11,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: GoogleFonts.inter().fontFamily,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: DashedLine(
+                      height: 1,
+                      color: AppColors.textColor.withOpacity(0.1),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 30),
+
+              // Google Button
+              SocialButton(
+                onPressed: () {},
+                icon: Image.asset(
+                  AppImages.google,
+                  height: AppDimens.dimen30,
+                  width: AppDimens.dimen30,
+                  fit: BoxFit.cover,
+                ),
+                label: 'Login with Google',
+              ),
+              const SizedBox(height: 15),
+
+              // Apple Button
+              SocialButton(
+                onPressed: () {},
+                icon: Image.asset(
+                  AppImages.apple,
+                  height: AppDimens.dimen30,
+                  width: AppDimens.dimen30,
+                  fit: BoxFit.cover,
+                ),
+                label: 'Login with Apple',
+              ),
+              const SizedBox(height: 50),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

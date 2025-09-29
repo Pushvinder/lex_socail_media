@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "541647583246",
+    "project_id": "the-friend-zone-6b17a",
+    "storage_bucket": "the-friend-zone-6b17a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:541647583246:android:de03aeaf001c1c59f4645f",
+        "android_client_info": {
+          "package_name": "com.allied.thefriendzzone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpRbTqt5ExGmjJfK-N87PFgIn_f_FeLOc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

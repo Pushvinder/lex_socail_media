@@ -1,0 +1,2 @@
+/Users/akashverma/The friend zone/lex-social-media/android/app/.cxx/Debug/5k6v1g2z/x86/CMakeFiles/edit_cache.dir
+/Users/akashverma/The friend zone/lex-social-media/android/app/.cxx/Debug/5k6v1g2z/x86/CMakeFiles/rebuild_cache.dir

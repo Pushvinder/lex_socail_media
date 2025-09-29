@@ -1,0 +1,59 @@
+import '../../../config/app_config.dart';
+import '../../subscription/subscription_screen.dart';
+
+class CommunityPreferencesController extends GetxController {
+  static const maxSelections = 5;
+
+  final List<String> communitiesList = [
+    "Photography",
+    "Crafting & DIY",
+    "Singing",
+    "Literature & Writing",
+    "Health & Fitness",
+    "Sports",
+    "Food & Drinks",
+    "Crafts & DIY",
+    "Movies & TV Shows",
+    "Science",
+    "Travel"
+  ];
+
+  final RxList<String> selectedCommunities = <String>[].obs;
+
+  bool get canProceed => selectedCommunities.isNotEmpty;
+
+  void toggleCommunity(String value) {
+    if (selectedCommunities.contains(value)) {
+      selectedCommunities.remove(value);
+    } else if (selectedCommunities.length < maxSelections) {
+      selectedCommunities.add(value);
+    }
+  }
+
+  void onDone() {
+    if (selectedCommunities.isEmpty) {
+      Get.snackbar(
+        AppStrings.error,
+        "Please select at least one community.",
+        colorText: AppColors.whiteColor,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.errorSnackbarColor.withOpacity(0.7),
+        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      );
+      return;
+    }
+
+    Get.snackbar(
+      AppStrings.success,
+      "Community preferences saved successfully",
+      colorText: AppColors.whiteColor,
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: AppColors.successSnackbarColor.withOpacity(0.7),
+      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+    );
+
+    Get.offAll(() => SubscriptionScreen());
+  }
+}

@@ -1,0 +1,56 @@
+import 'package:cached_network_image/cached_network_image.dart';
+
+import '../config/app_config.dart';
+
+class FullScreenImageViewer extends StatelessWidget {
+  final List<String> images;
+  final int initialIndex;
+
+  const FullScreenImageViewer({
+    Key? key,
+    required this.images,
+    required this.initialIndex,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final pageController = PageController(initialPage: initialIndex);
+
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          PageView.builder(
+            controller: pageController,
+            itemCount: images.length,
+            itemBuilder: (context, idx) {
+              return Center(
+                child: InteractiveViewer(
+                  minScale: 1,
+                  maxScale: 4,
+                  child: CachedNetworkImage(
+                    imageUrl: images[idx],
+                    fit: BoxFit.contain,
+                    placeholder: (context, url) =>
+                        Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) =>
+                    const Icon(Icons.broken_image, size: 80, color: Colors.white38),
+                  ),
+                ),
+              );
+            },
+          ),
+          SafeArea(
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                icon: const Icon(Icons.close, color: Colors.white, size: 32),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

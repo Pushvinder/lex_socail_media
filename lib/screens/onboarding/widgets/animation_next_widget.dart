@@ -1,0 +1,93 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import '../../../utils/app_colors.dart';
+import '../../../utils/app_dimen.dart';
+import '../../../utils/app_img.dart';
+
+class AnimatedCircularProgressButton extends StatelessWidget {
+  final double progress;
+  final String text;
+  final IconData? icon;
+  final Color backgroundColor;
+  final Color backgroundBottomColor;
+  final VoidCallback onTap;
+
+  const AnimatedCircularProgressButton({
+    super.key,
+    required this.progress,
+    required this.text,
+    required this.backgroundColor,
+    required this.backgroundBottomColor,
+    this.icon,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: SizedBox(
+        width: AppDimens.dimen90,
+        height: AppDimens.dimen90 + 6,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            // Background Circle
+            Container(
+              width: AppDimens.dimen90,
+              height: AppDimens.dimen90 - 5,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                // color: backgroundColor,
+                gradient: LinearGradient(
+                  colors: [
+                    backgroundColor, // Top color
+                    backgroundBottomColor, // Bottom color
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+            ),
+
+            // Circular Progress Indicator
+            SizedBox(
+              width: AppDimens.dimen90 + 9,
+              height: AppDimens.dimen90 + 9,
+              child: CircularProgressIndicator(
+                strokeCap: StrokeCap.round,
+                value: progress,
+                strokeWidth: 4.0,
+                backgroundColor: Colors.grey.shade300,
+                valueColor: const AlwaysStoppedAnimation<Color>(
+                  AppColors.primaryColor,
+                ),
+              ),
+            ),
+
+            // Text/Icon
+            Center(
+              child: icon == null
+                  ? Text(
+                      text,
+                      style: TextStyle(
+                        color: AppColors.textColor2,
+                        fontSize: FontDimen.dimen12,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: GoogleFonts.inter().fontFamily,
+                      ),
+                    )
+                  : Image.asset(
+                      AppImages.check,
+                      height: AppDimens.dimen26,
+                      width: AppDimens.dimen26,
+                      fit: BoxFit.contain,
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
