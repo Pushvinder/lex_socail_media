@@ -45,6 +45,8 @@ class _ChatScreenState extends State<ChatScreen> {
       ChatController(
         chatId: widget.chatId,
         otherUserId: widget.otherUserId,
+        otherUserName: widget.userName,
+        otherUserProfileUrl: widget.userAvatar,
         isGroup: widget.isGroup,
       ),
     );
@@ -151,7 +153,9 @@ class _ChatScreenState extends State<ChatScreen> {
                             ),
                             SizedBox(width: AppDimens.dimen6),
                             Text(
-                              widget.isOnline ? AppStrings.online : AppStrings.offline,
+                              widget.isOnline
+                                  ? AppStrings.online
+                                  : AppStrings.offline,
                               style: TextStyle(
                                 color: AppColors.whiteColor.withOpacity(0.7),
                                 fontSize: FontDimen.dimen11,

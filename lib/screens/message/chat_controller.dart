@@ -3,13 +3,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:the_friendz_zone/config/app_config.dart';
+import 'package:the_friendz_zone/screens/home/home_controller.dart';
 import 'package:the_friendz_zone/screens/message/models/chat_model.dart';
 import 'package:the_friendz_zone/screens/message/models/message_model.dart';
+import 'package:the_friendz_zone/screens/profile/profile_controller.dart';
 import 'package:the_friendz_zone/utils/firebase_utils.dart';
 
 class ChatController extends GetxController {
   String? chatId;
   final String otherUserId;
+  final String otherUserName;
+  final String otherUserProfileUrl;
   final bool isGroup;
 
   final String currentUserId = StorageHelper().getUserId.toString();
@@ -20,6 +24,8 @@ class ChatController extends GetxController {
   ChatController({
     this.chatId,
     required this.otherUserId,
+    required this.otherUserName,
+    required this.otherUserProfileUrl,
     this.isGroup = false,
   });
 
@@ -158,10 +164,26 @@ class ChatController extends GetxController {
           .collection(FirebaseUtils.chats)
           .doc(chatId);
 
+      // Create participant data maps
+      final participantNames = {
+        otherUserId: otherUserName,
+      };
+      final participantProfileUrls = {
+        otherUserId: otherUserProfileUrl,
+      };
+
+      // Add current user data to the maps
+      participantNames[currentUserId] =
+          Get.find<HomeController>().userResponse.data?.fullname ?? "";
+      participantProfileUrls[currentUserId] =
+          Get.find<HomeController>().userResponse.data?.profile ?? "";
+
       final chatModel = ChatModel(
         chatId: chatRef.id,
         isGroupChat: isGroup,
         participantIds: [currentUserId, otherUserId],
+        participantNames: participantNames,
+        participantProfileUrls: participantProfileUrls,
         lastMessage: '',
       );
 
@@ -169,6 +191,23 @@ class ChatController extends GetxController {
       return chatModel;
     } catch (e) {
       rethrow;
+    }
+  }
+
+  Future<void> _storeUserDataInFirebase(
+      String userId, String userName, String profileUrl) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection(FirebaseUtils.users)
+          .doc(userId)
+          .set({
+        'id': userId,
+        'fullname': userName,
+        'profile': profileUrl,
+        'createdAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+    } catch (e) {
+      print('Error storing user data in Firebase: $e');
     }
   }
 }

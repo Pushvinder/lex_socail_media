@@ -334,7 +334,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                    
 
                                     Visibility(
-                                      visible: (_userProfileController.user.data?.isFriend ?? false),
+                                      visible: !(_userProfileController.user.data?.isFriend ?? false),
                                       child: Row(
                                         children: [
                                       Container(

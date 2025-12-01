@@ -112,15 +112,21 @@ class MessageScreen extends StatelessWidget {
                       itemCount: msgs.length,
                       itemBuilder: (context, idx) {
                         final chatItem = msgs[idx];
-                        final otherUser =
-                            controller.getOtherParticipant(chatItem);
                         return GestureDetector(
                           onTap: () {
                             Get.to(
                               () => ChatScreen(
-                                userName: otherUser?.fullName ?? 'Unknown',
-                                userAvatar: otherUser?.photoUrl ?? '',
-                                otherUserId: otherUser?.uId ?? '',
+                                userName: controller
+                                        .getOtherParticipantName(chatItem) ??
+                                    'Unknown',
+                                userAvatar:
+                                    controller.getOtherParticipantProfileUrl(
+                                            chatItem) ??
+                                        '',
+                                otherUserId: chatItem.participantIds.firstWhere(
+                                  (id) => id != controller.currentUserId,
+                                  orElse: () => '',
+                                ),
                                 chatId: chatItem.chatId,
                                 isGroup: chatItem.isGroupChat,
                               ),
@@ -128,7 +134,7 @@ class MessageScreen extends StatelessWidget {
                           },
                           child: MessageTile(
                             chat: chatItem,
-                            otherUser: otherUser,
+                            otherUser: controller.getOtherParticipant(chatItem),
                             highlighted: idx < 2,
                           ),
                         );

@@ -30,7 +30,7 @@ class ProfileController extends GetxController {
   @override
   void onInit() {
     debugPrint('on init called');
-    _getProfileDetails();
+    getProfileDetails();
     _getPostDetails();
 
     // TODO: implement onInit
@@ -72,7 +72,7 @@ class ProfileController extends GetxController {
   }
 
   // profile details api
-  Future<void> _getProfileDetails() async {
+  Future<void> getProfileDetails() async {
     try {
       debugPrint('on init details called');
       int userId = StorageHelper().getUserId;

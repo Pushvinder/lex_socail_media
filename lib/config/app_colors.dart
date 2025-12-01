@@ -94,3 +94,4 @@ class AppColors {
 
   static const Color textFieldInnerShadow = Color(0xFF6D6D6D);
 }
+

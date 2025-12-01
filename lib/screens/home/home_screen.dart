@@ -408,14 +408,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
 
                           // Ad Banner
-                          const Positioned(
+                           Positioned(
                             left: 0,
                             right: 0,
                             bottom: 0,
                             child: Padding(
                               padding: EdgeInsets.only(bottom: 0),
                               child: AdBannerWidget(
-                                adImage: AssetImage(AppImages.ad),
                               ),
                             ),
                           )
@@ -458,14 +457,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           // Ad Banner
-                          const Positioned(
+                           Positioned(
                             left: 0,
                             right: 0,
                             bottom: 0,
                             child: Padding(
                               padding: EdgeInsets.only(bottom: 0),
                               child: AdBannerWidget(
-                                adImage: AssetImage(AppImages.ad),
                               ),
                             ),
                           )

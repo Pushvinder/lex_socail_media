@@ -7,6 +7,10 @@ class ChatModel {
   String? groupIcon;
   String? creatorId;
   List<String> participantIds;
+  Map<String, String>?
+      participantNames; // Store id: name mapping for both users
+  Map<String, String>?
+      participantProfileUrls; // Store id: profileUrl mapping for both users
   Timestamp? lastMessageTime;
   String lastMessage;
   Map<String, int>? unreadMessages;
@@ -19,6 +23,8 @@ class ChatModel {
     this.groupIcon,
     this.creatorId,
     required this.participantIds,
+    this.participantNames,
+    this.participantProfileUrls,
     this.lastMessageTime,
     required this.lastMessage,
     this.unreadMessages,
@@ -33,6 +39,8 @@ class ChatModel {
       'groupIcon': groupIcon,
       'creatorId': creatorId,
       'participantIds': participantIds,
+      'participantNames': participantNames,
+      'participantProfileUrls': participantProfileUrls,
       'lastMessageTime': lastMessageTime ?? FieldValue.serverTimestamp(),
       'lastMessage': lastMessage,
       'unreadMessages': unreadMessages,
@@ -48,6 +56,8 @@ class ChatModel {
       'groupIcon': groupIcon,
       'creatorId': creatorId,
       'participantIds': participantIds,
+      'participantNames': participantNames,
+      'participantProfileUrls': participantProfileUrls,
       'lastMessageTime': lastMessageTime ?? FieldValue.serverTimestamp(),
       'lastMessage': lastMessage,
       'blocked': blocked,
@@ -62,8 +72,13 @@ class ChatModel {
       groupIcon: map['groupIcon'],
       creatorId: map['creatorId'],
       participantIds: List<String>.from(map['participantIds']),
-      lastMessageTime:
-      map['lastMessageTime'] ,
+      participantNames: map['participantNames'] != null
+          ? Map<String, String>.from(map['participantNames'])
+          : null,
+      participantProfileUrls: map['participantProfileUrls'] != null
+          ? Map<String, String>.from(map['participantProfileUrls'])
+          : null,
+      lastMessageTime: map['lastMessageTime'],
       lastMessage: map['lastMessage'] ?? "",
       unreadMessages: Map<String, int>.from(map['unreadMessages'] ?? {}),
       blocked: Map<String, bool>.from(map['blocked'] ?? {}),

@@ -95,4 +95,72 @@ class MessageController extends GetxController {
     );
     return chatParticipants[otherUserId];
   }
+
+  Future<String?> fetchUserName(String userId) async {
+    try {
+      final userDoc = await FirebaseFirestore.instance
+          .collection(FirebaseUtils.users)
+          .doc(userId)
+          .get();
+
+      if (userDoc.exists && userDoc.data() != null) {
+        final userData = UserProfileData.fromJson(userDoc.data()!);
+        return userData.fullname ?? 'Unknown User';
+      }
+    } catch (e) {
+      print('Error fetching user name: $e');
+    }
+    return 'Unknown User';
+  }
+
+  Future<String?> fetchUserProfileUrl(String userId) async {
+    try {
+      final userDoc = await FirebaseFirestore.instance
+          .collection(FirebaseUtils.users)
+          .doc(userId)
+          .get();
+
+      if (userDoc.exists && userDoc.data() != null) {
+        final userData = UserProfileData.fromJson(userDoc.data()!);
+        return userData.profile ?? '';
+      }
+    } catch (e) {
+      print('Error fetching user profile URL: $e');
+    }
+    return '';
+  }
+
+  String? getOtherParticipantName(ChatModel chat) {
+    final otherUserId = chat.participantIds.firstWhere(
+      (id) => id != currentUserId,
+      orElse: () => '',
+    );
+
+    // First try to get from stored participantNames
+    if (chat.participantNames != null &&
+        chat.participantNames!.containsKey(otherUserId)) {
+      return chat.participantNames![otherUserId];
+    }
+
+    // Fallback to fetched participant data
+    final otherUser = chatParticipants[otherUserId];
+    return otherUser?.fullname ?? 'Unknown User';
+  }
+
+  String? getOtherParticipantProfileUrl(ChatModel chat) {
+    final otherUserId = chat.participantIds.firstWhere(
+      (id) => id != currentUserId,
+      orElse: () => '',
+    );
+
+    // First try to get from stored participantProfileUrls
+    if (chat.participantProfileUrls != null &&
+        chat.participantProfileUrls!.containsKey(otherUserId)) {
+      return chat.participantProfileUrls![otherUserId];
+    }
+
+    // Fallback to fetched participant data
+    final otherUser = chatParticipants[otherUserId];
+    return otherUser?.profile ?? '';
+  }
 }

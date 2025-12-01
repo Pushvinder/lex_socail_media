@@ -1,10 +1,13 @@
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:the_friendz_zone/api_helpers/api_param.dart';
 import 'package:the_friendz_zone/models/connection_list_response.dart';
 import 'package:the_friendz_zone/models/verify_otp_response.dart';
 import 'package:the_friendz_zone/screens/home/models/post_list_response.dart';
+import 'package:the_friendz_zone/screens/profile/profile_controller.dart';
 import 'package:the_friendz_zone/utils/app_loader.dart';
 
 import '../../config/app_config.dart';
+import '../profile/models/user_response.dart';
 import '../requests/models/pending_user_request_response.dart';
 import 'models/connection_user_model.dart';
 import 'models/live_user.dart';
@@ -17,6 +20,8 @@ class HomeController extends GetxController {
 
   final RxList<Posts> posts = <Posts>[].obs;
   RxList<UserRequestData> requests = <UserRequestData>[].obs;
+  late AdWithView bannerAds;
+  var isBannerAdLoaded = false.obs;
   final RxList<LiveUser> liveUsers = <LiveUser>[
     LiveUser(
       name: "Brody",
@@ -91,13 +96,30 @@ class HomeController extends GetxController {
       imageUrl: "https://randomuser.me/api/portraits/women/12.jpg",
     ),
   ].obs;
+  UserResponse userResponse = UserResponse();
 
   @override
   void onInit() {
     _getUserHomeConnectionList();
     _getHomePostList();
     _getPendingRequestList();
+    getProfileDetails();
+    loadAd();
     super.onInit();
+  }
+
+  Future<void> getProfileDetails() async {
+    try {
+      debugPrint('on init details called');
+      int userId = StorageHelper().getUserId;
+      var result = await ApiManager.callPostWithFormData(
+          body: {ApiParam.id: "$userId"}, endPoint: ApiUtils.getProfileDetail);
+       userResponse = UserResponse.fromJson(result);
+
+    } catch (e) {
+      AppLoader.hide();
+      debugPrint('error user details api ${e.toString()}');
+    }
   }
 
   Future<void> onConnect(
@@ -330,4 +352,22 @@ class HomeController extends GetxController {
       return;
     }
   }
+
+  void loadAd() async {
+    BannerAd(
+      adUnitId: "ca-app-pub-3940256099942544/9214589741",
+      request: const AdRequest(),
+      size: AdSize(width : Get.width.toInt(), height:  50),
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          bannerAds = ad as BannerAd;
+          isBannerAdLoaded.value = true;
+        },
+        onAdFailedToLoad: (ad, err) {
+          ad.dispose();
+        },
+      ),
+    ).load();
+  }
+
 }
