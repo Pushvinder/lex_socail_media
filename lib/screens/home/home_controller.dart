@@ -128,7 +128,7 @@ class HomeController extends GetxController {
     int userId = StorageHelper().getUserId;
 
     VerifyOtpResponse? response =
-        await _sendRequest(userId.toString(), user.id ?? '');
+        await _sendRequest(userId.toString(), user.id ?? '', true);
     _removeTopUser();
   }
 
@@ -136,7 +136,7 @@ class HomeController extends GetxController {
     int userId = StorageHelper().getUserId;
 
     VerifyOtpResponse? response =
-        await _sendRequest(userId.toString(), user.id ?? '');
+        await _sendRequest(userId.toString(), user.id ?? '', false);
     _removeTopUser();
   }
 
@@ -171,11 +171,12 @@ class HomeController extends GetxController {
   /// @param [receiverId] is the id of the other user we are sending request to
   /// @param [senderId] is the id of the current user
   Future<VerifyOtpResponse?> _sendRequest(
-      String senderId, String receiverId) async {
+      String senderId, String receiverId, bool status) async {
     try {
       var result = await ApiManager.callPostWithFormData(body: {
         ApiParam.receiverId: receiverId,
         ApiParam.senderId: senderId,
+        ApiParam.status: status,
       }, endPoint: ApiUtils.sendRequest);
 
       VerifyOtpResponse response = VerifyOtpResponse.fromJson(result);

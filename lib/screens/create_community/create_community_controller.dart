@@ -8,9 +8,11 @@ import 'package:the_friendz_zone/models/interest_response.dart';
 import 'package:the_friendz_zone/models/verify_otp_response.dart';
 import 'package:the_friendz_zone/utils/app_loader.dart';
 import '../../../config/app_config.dart';
+import '../community_profile/models/community_profile_model.dart';
 
 class CreateCommunityController extends GetxController {
-  final Rx<File?> communityImage = Rx<File?>(null);
+   var communityImage = ''.obs;
+   var isUpdate = false.obs;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -45,6 +47,7 @@ class CreateCommunityController extends GetxController {
     rulesController.addListener(validateForm);
     selectedCategories.listen((_) => validateForm());
     communityImage.listen((_) => validateForm());
+    prefilledData();
   }
 
   @override
@@ -65,7 +68,7 @@ class CreateCommunityController extends GetxController {
         imageQuality: 80,
       );
       if (image != null) {
-        communityImage.value = File(image.path);
+        communityImage.value = image.path;
       }
     } catch (_) {
       Get.snackbar(
@@ -340,7 +343,7 @@ class CreateCommunityController extends GetxController {
           },
           endPoint: ApiUtils.createCommunity,
           fileKey: ApiParam.image,
-          filePaths: [communityImage.value?.path ?? '']);
+          filePaths: [communityImage.value ?? '']);
 
       VerifyOtpResponse response = VerifyOtpResponse.fromJson(result);
       AppLoader.hide();
@@ -367,5 +370,17 @@ class CreateCommunityController extends GetxController {
         categoriesList.refresh();
       }
     } catch (e) {}
+  }
+
+  void prefilledData() {
+    if(Get.arguments != null){
+      isUpdate.value = true;
+      CommunityProfileModel communityProfileModel = Get.arguments;
+      communityImage.value = communityProfileModel.data.communityProfile;
+      nameController.text = communityProfileModel.data.communityName;
+      descriptionController.text = communityProfileModel.data.communityDescription;
+      rulesController.text = communityProfileModel.data.communityRules;
+
+    }
   }
 }

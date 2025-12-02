@@ -4,7 +4,7 @@ import '../../../config/app_config.dart';
 import '../models/community_profile_model.dart';
 
 class CommunityMemberTile extends StatelessWidget {
-  final CommunityMember member;
+  final JoinedUser member;
   final bool showRemove;
   final VoidCallback onRemove;
 
@@ -32,7 +32,7 @@ class CommunityMemberTile extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(100),
               child: CachedNetworkImage(
-                imageUrl: member.avatarUrl,
+                imageUrl: member.profile,
                 fit: BoxFit.cover,
                 width: 46,
                 height: 46,
@@ -52,7 +52,7 @@ class CommunityMemberTile extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              member.name,
+              member.fullname,
               style: TextStyle(
                 color: AppColors.textColor3.withOpacity(1),
                 fontFamily: GoogleFonts.inter().fontFamily,

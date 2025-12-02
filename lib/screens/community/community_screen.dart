@@ -339,9 +339,7 @@ class CommunityScreen extends StatelessWidget {
           );
         },
         onMember: () {
-          Get.to(() => CommunityProfileScreen(
-                isEdit: true,
-              ));
+          controller.fetchCommunityDetails(data[i].communityId);
         },
         onJoin: () {
           debugPrint('join status ${data[i].joinStatus}');
@@ -392,9 +390,9 @@ class CommunityScreen extends StatelessWidget {
           );
         },
         onLeave: () {
-          Get.to(() => CommunityProfileScreen(
-                isEdit: false,
-              ));
+          // Get.to(() => CommunityProfileScreen(
+          //       isEdit: false,
+          //     ));
         },
         onMenu: () {
           showActionSheet(

@@ -1,6 +1,7 @@
 import '../../config/app_config.dart';
 import '../../widgets/bottom_nav_bar/bottom_nav_bar.dart';
 import '../../widgets/bottom_nav_bar/bottom_nav_controller.dart';
+import '../live/live_stream_screen.dart';
 import '../live/widgets/show_go_live_bottom_sheet.dart';
 import '../notifications/notification_screen.dart';
 import '../requests/requests_screen.dart';
@@ -15,6 +16,7 @@ import 'widgets/post_card_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -69,7 +71,8 @@ class _HomeScreenState extends State<HomeScreen> {
       onPopInvokedWithResult: (didPop, result) {},
       child: Scaffold(
         backgroundColor: AppColors.scaffoldBackgroundColor,
-        bottomNavigationBar: buildBottomNavBar(Get.findOrPut<BottomNavController>(BottomNavController())),
+        bottomNavigationBar: buildBottomNavBar(
+            Get.findOrPut<BottomNavController>(BottomNavController())),
         body: SafeArea(
           child: Column(
             children: [
@@ -96,7 +99,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     const Spacer(),
                     GestureDetector(
                       onTap: () {
-                        showGoLiveBottomSheet(context, (title) {});
+                        showGoLiveBottomSheet(context, (title) {
+                          Get.to(() => BroadcastPage(
+                                isBroadcaster: false,
+                                channelName: "test",
+                                userName: 'user',
+                              ));
+                        });
                       },
                       child: Text(
                         AppStrings.goLive,
@@ -121,44 +130,47 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(width: 16),
                     GestureDetector(
                       onTap: () => Get.to(() => RequestsScreen()),
-                      child:Obx(()=> Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          Image.asset(
-                            AppImages.profileAdd,
-                            width: 20,
-                            height: 20,
-                          ),
-                          (controller.requests.length??0) > 0
-                              ?   Positioned(
-                            top: -9,
-                            left: 0,
-                            right: -3,
-                            child: Container(
-                              width: 14,
-                              height: 14,
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                    color: AppColors.scaffoldBackgroundColor,
-                                    width: 1),
+                      child: Obx(() => Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Image.asset(
+                                AppImages.profileAdd,
+                                width: 20,
+                                height: 20,
                               ),
-                              child: Center(
-                                child: Text(
-                                  (controller.requests.length??0) > 9
-                                      ? '9+'
-                                      : '${(controller.requests.length??0)}',
-                                  style: TextStyle(
-                                    fontSize: 9,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ):Container(),
-                        ],
-                      )),
+                              (controller.requests.length ?? 0) > 0
+                                  ? Positioned(
+                                      top: -9,
+                                      left: 0,
+                                      right: -3,
+                                      child: Container(
+                                        width: 14,
+                                        height: 14,
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                              color: AppColors
+                                                  .scaffoldBackgroundColor,
+                                              width: 1),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            (controller.requests.length ?? 0) >
+                                                    9
+                                                ? '9+'
+                                                : '${(controller.requests.length ?? 0)}',
+                                            style: TextStyle(
+                                              fontSize: 9,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : Container(),
+                            ],
+                          )),
                     ),
                     const SizedBox(width: 17),
                     GestureDetector(
@@ -254,7 +266,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ? 20
                                   : cardsIndex == 1
                                       ? 32 // first card behind (slight horizontal)
-                                      : 44, // second card behind (slightly more, but NOT extreme)
+                                      : 44,
+                              // second card behind (slightly more, but NOT extreme)
                               right: cardsIndex == 0
                                   ? 20
                                   : cardsIndex == 1
@@ -408,14 +421,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
 
                           // Ad Banner
-                           Positioned(
+                          Positioned(
                             left: 0,
                             right: 0,
                             bottom: 0,
                             child: Padding(
                               padding: EdgeInsets.only(bottom: 0),
-                              child: AdBannerWidget(
-                              ),
+                              child: AdBannerWidget(),
                             ),
                           )
                         ],
@@ -457,14 +469,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           // Ad Banner
-                           Positioned(
+                          Positioned(
                             left: 0,
                             right: 0,
                             bottom: 0,
                             child: Padding(
                               padding: EdgeInsets.only(bottom: 0),
-                              child: AdBannerWidget(
-                              ),
+                              child: AdBannerWidget(),
                             ),
                           )
                         ],

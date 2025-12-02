@@ -6,6 +6,8 @@ import 'package:the_friendz_zone/screens/community/models/join_comminit_request_
 import 'package:the_friendz_zone/utils/app_loader.dart';
 
 import '../../config/app_config.dart';
+import '../community_profile/community_profile_screen.dart';
+import '../community_profile/models/community_profile_model.dart';
 import 'models/community_model.dart';
 
 class CommunityController extends GetxController {
@@ -272,5 +274,29 @@ class CommunityController extends GetxController {
         // categoriesList.refresh();
       }
     } catch (e) {}
+  }
+
+  Future<void> fetchCommunityDetails(String? communityId) async {
+    try {
+      int userId = StorageHelper().getUserId;
+      AppLoader.show();
+      var result = await ApiManager.callPostWithFormData(body: {
+        ApiParam.id: '$userId',
+        ApiParam.communityId: communityId,
+      }, endPoint: ApiUtils.getCommunityDetails);
+
+      CommunityProfileModel response = CommunityProfileModel.fromJson(result);
+
+      if (response.status == AppStrings.apiSuccess && response.data != null) {
+        AppLoader.hide();
+        Get.to(() => CommunityProfileScreen(
+          isEdit: true,communityProfileModel: response,
+        ));
+      }
+    } catch (e, s) {
+      AppLoader.hide();
+      debugPrint('ERROR MY COMMUNITY ${e.toString()} ,  $s');
+    }
+
   }
 }

@@ -5,7 +5,7 @@ class VerifyOtpResponse {
   VerifyOtpResponse({this.status, this.message});
 
   VerifyOtpResponse.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
+    status = json['status'].toString();
     message = json['message'];
   }
 

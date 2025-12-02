@@ -230,12 +230,15 @@ class AppStrings {
   static const String postTime = '2h';
   static const String editPost = 'Edit Post';
   static const String deletePost = 'Delete Post';
+  static const String deleteCommunity = 'Delete Community';
 
   // POSTS UI section:
   static const String dialogEditPostMessage =
       'Would you like to edit this post?';
   static const String dialogDeletePostMessage =
       'Are you sure you want to delete this post?';
+  static const String dialogDeleteCommunityMessage =
+      'Are you sure you want to delete this Community?';
   static const String postDeletedSnackbar = 'Post deleted!';
 
   // Community
@@ -296,7 +299,6 @@ class AppStrings {
   static const String description = "Description";
   static const String rulesOfCommunity = "Rules of Community";
   static const String inviteMembers = "Invite Members";
-  static const String deleteCommunity = "Delete Community";
   static const String remove = "Remove";
 
   // Validation and picker
@@ -315,6 +317,7 @@ class AppStrings {
 
   // Create Community
   static const String createCommunityTitle = 'Create New Community';
+  static const String updateCommunityTitle = 'Update Community';
   static const String communityName = 'Name of Community';
   static const String communityNameHint = 'Enter a name of your community';
   static const String selectCategory = 'Select a Category';
@@ -324,6 +327,7 @@ class AppStrings {
   static const String communityRules = 'Add Rules of your Ccommunity';
   static const String communityRulesHint = 'Add rules here...';
   static const String createCommunityButton = 'Create';
+  static const String createUpdateButton = 'Update';
   static const String communityCategoryError = 'Please select a category.';
   static const String communityImageError = 'Please select a community photo.';
   static const String communityNameError = 'Please enter a community name.';

@@ -48,6 +48,7 @@ class ApiUtils {
   static const String createCommunityPost = 'create_community_post';
   static const String updateCommunityPost = 'update_community_post';
   static const String deleteCommunityPost = 'delete_community_post';
+  static const String deleteCommunity = 'delete_community';
   static const String sendLinkRequest = 'send_link_request';
   static const String respondeLinkRequest = 'respond_link_request';
   static const String getListLinkedChildren = 'get_list_linked_children';

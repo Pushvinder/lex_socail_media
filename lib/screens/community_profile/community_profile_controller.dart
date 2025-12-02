@@ -1,64 +1,21 @@
+import 'package:the_friendz_zone/api_helpers/api_param.dart';
+import 'package:the_friendz_zone/models/verify_otp_response.dart';
+import 'package:the_friendz_zone/screens/community/community_controller.dart';
+
 import '../../config/app_config.dart';
+import '../create_community/create_community_screen.dart';
 import 'models/community_profile_model.dart';
 
 class CommunityProfileController extends GetxController {
-  late CommunityProfileModel community;
+   // CommunityProfileModel? community;
 
   @override
   void onInit() {
     super.onInit();
-    community = CommunityProfileModel(
-      id: '1',
-      name: 'Gamers Hub',
-      imageUrl:
-          'https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=400&q=80',
-      description:
-          "Whether you're a casual player or a hardcore pro, this is your ultimate gaming destination! Discuss the latest game releases, share winning strategies, exchange tips, and stay updated on industry news. Connect with fellow gamers, join exciting tournaments, and level up your gaming experience together!",
-      rules:
-          "– Treat everyone with kindness and respect. No hate speech, bullying, or harassment.\n– Keep discussions relevant to the community’s theme.\n– Avoid excessive promotions or irrelevant links.\n– No fake news, misinformation, or inappropriate content.\n– Don’t share personal information of yourself or others.",
-      membersCount: 2500,
-      members: [
-        CommunityMember(
-          id: '1',
-          name: 'Brody Cora',
-          avatarUrl: 'https://randomuser.me/api/portraits/men/32.jpg',
-        ),
-        CommunityMember(
-          id: '2',
-          name: 'Cameron Emma',
-          avatarUrl: 'https://randomuser.me/api/portraits/women/44.jpg',
-        ),
-        CommunityMember(
-          id: '3',
-          name: 'Callum Ezra',
-          avatarUrl: 'https://randomuser.me/api/portraits/women/65.jpg',
-        ),
-        CommunityMember(
-          id: '4',
-          name: 'Danielle Ezra',
-          avatarUrl: 'https://randomuser.me/api/portraits/women/68.jpg',
-        ),
-        CommunityMember(
-          id: '5',
-          name: 'Brayden Cole',
-          avatarUrl: 'https://randomuser.me/api/portraits/men/41.jpg',
-        ),
-        CommunityMember(
-          id: '6',
-          name: 'Cameron Cora',
-          avatarUrl: 'https://randomuser.me/api/portraits/men/42.jpg',
-        ),
-        CommunityMember(
-          id: '7',
-          name: 'Avery Everett',
-          avatarUrl: 'https://randomuser.me/api/portraits/women/43.jpg',
-        ),
-      ],
-    );
   }
 
   void removeMember(String memberId) {
-    community.members.removeWhere((m) => m.id == memberId);
+    // community.members.removeWhere((m) => m.id == memberId);
     update();
   }
 
@@ -95,11 +52,47 @@ class CommunityProfileController extends GetxController {
     );
   }
 
-  void deleteCommunity() {
-    // delete logic
+  void deleteCommunity(String communityId) {
+    AppDialogs.showConfirmationDialog(
+      title: AppStrings.deleteCommunity,
+      description:
+      AppStrings.dialogDeleteCommunityMessage,
+      iconAsset: AppImages.deleteIcon,
+      iconBgColor: AppColors.redColor
+          .withOpacity(0.13),
+      iconColor: AppColors.redColor,
+      confirmButtonText:
+      AppStrings.deleteCommunity,
+      confirmButtonColor: AppColors.redColor,
+      onConfirm: () async {
+        try {
+          int userId = StorageHelper().getUserId;
+
+          var result = await ApiManager.callPostWithFormData(body: {
+            ApiParam.userId: '$userId',
+            ApiParam.communityId: communityId,
+          }, endPoint: ApiUtils.deleteCommunity);
+
+          VerifyOtpResponse response = VerifyOtpResponse.fromJson(
+              result);
+
+          if (response.status == "true") {
+            Get.back();
+           Get.find<CommunityController>().onInit();
+
+          }
+        } catch (e, s) {
+          debugPrint('ERROR join COMMUNITY ${e.toString()} ,  $s');
+        }
+      }
+    );
   }
 
-  void editCommunity() {
-    // edit logic
+  void editCommunity(CommunityProfileModel communityProfileModel) {
+    Get.to(() => CreateCommunityScreen(),arguments: communityProfileModel)
+        ?.then((_) async {
+
+    });
   }
+
 }

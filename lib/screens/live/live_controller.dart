@@ -1,3 +1,5 @@
+import 'package:permission_handler/permission_handler.dart';
+
 import '../../config/app_config.dart';
 
 class LiveController extends GetxController {
@@ -14,5 +16,16 @@ class LiveController extends GetxController {
   void onClose() {
     titleController.dispose();
     super.onClose();
+  }
+
+  Future<bool> checkPermission() async {
+    final cameraPermission = await Permission.camera.request();
+    print(cameraPermission);
+    final micPermission = await Permission.camera.request();
+    print(micPermission);
+    if(cameraPermission.isGranted && micPermission.isGranted){
+      return true;
+    }
+    return false;
   }
 }

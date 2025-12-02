@@ -1,13 +1,15 @@
 import '../../config/app_config.dart';
 import 'community_profile_controller.dart';
+import 'models/community_profile_model.dart';
 import 'widgets/community_member_tile.dart';
 
 class CommunityProfileScreen extends StatelessWidget {
   final bool isEdit;
-
+  final CommunityProfileModel communityProfileModel;
   const CommunityProfileScreen({
     Key? key,
     this.isEdit = false,
+    required this.communityProfileModel
   }) : super(key: key);
 
   @override
@@ -15,12 +17,17 @@ class CommunityProfileScreen extends StatelessWidget {
     return GetBuilder<CommunityProfileController>(
       init: CommunityProfileController(),
       builder: (controller) {
-        final c = controller.community;
+         var c = communityProfileModel;
 
         return Scaffold(
           backgroundColor: AppColors.scaffoldBackgroundColor,
           body: SafeArea(
-            child: Column(
+            child: communityProfileModel == null ? Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: AppColors.textColor5.withOpacity(0.65),
+              ),
+            ) : Column(
               children: [
                 // --- Custom AppBar Row ---
                 Padding(
@@ -61,7 +68,7 @@ class CommunityProfileScreen extends StatelessWidget {
                       // --- Edit Icon (only if isEdit is true) ---
                       if (isEdit)
                         GestureDetector(
-                          onTap: controller.editCommunity,
+                          onTap: ()=> controller.editCommunity(communityProfileModel),
                           child: Padding(
                             padding: const EdgeInsets.only(right: 6),
                             child: Image.asset(
@@ -96,7 +103,7 @@ class CommunityProfileScreen extends StatelessWidget {
                                 width: 3,
                               ),
                               image: DecorationImage(
-                                image: NetworkImage(c.imageUrl),
+                                image: NetworkImage(c?.data.communityProfile ?? ''),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -106,7 +113,7 @@ class CommunityProfileScreen extends StatelessWidget {
 
                         // --- Community Name ---
                         Text(
-                          c.name,
+                          c?.data.communityName ?? '',
                           style: TextStyle(
                             color: AppColors.textColor3.withOpacity(1),
                             fontSize: FontDimen.dimen18,
@@ -135,6 +142,7 @@ class CommunityProfileScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              SizedBox(width: double.infinity),
                               Text(
                                 AppStrings.description,
                                 style: TextStyle(
@@ -147,7 +155,7 @@ class CommunityProfileScreen extends StatelessWidget {
                               ),
                               SizedBox(height: AppDimens.dimen5),
                               Text(
-                                c.description,
+                                c?.data.communityDescription ?? '',
                                 style: TextStyle(
                                   color: AppColors.textColor3.withOpacity(0.7),
                                   fontSize: FontDimen.dimen10,
@@ -181,6 +189,7 @@ class CommunityProfileScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              SizedBox(width: double.infinity),
                               Text(
                                 AppStrings.rulesOfCommunity,
                                 style: TextStyle(
@@ -193,7 +202,7 @@ class CommunityProfileScreen extends StatelessWidget {
                               ),
                               SizedBox(height: AppDimens.dimen5),
                               Text(
-                                c.rules,
+                                c!.data.communityRules,
                                 style: TextStyle(
                                   color: AppColors.textColor3.withOpacity(0.7),
                                   fontSize: FontDimen.dimen10,
@@ -251,7 +260,7 @@ class CommunityProfileScreen extends StatelessWidget {
                                       ),
                                       SizedBox(width: AppDimens.dimen6),
                                       Text(
-                                        "${c.membersCount >= 1000 ? '${(c.membersCount / 1000).toStringAsFixed(1)}K' : c.membersCount}",
+                                        "${c!.data.totalJoinedUsers >= 1000 ? '${(c.data.totalJoinedUsers / 1000).toStringAsFixed(1)}K' : c.data.totalJoinedUsers}",
                                         style: TextStyle(
                                           color: AppColors.textColor3
                                               .withOpacity(1),
@@ -271,14 +280,14 @@ class CommunityProfileScreen extends StatelessWidget {
                               ListView.builder(
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
-                                itemCount: c.members.length,
+                                itemCount: c.data.joinedUsers.length,
                                 itemBuilder: (context, idx) {
-                                  final member = c.members[idx];
+                                  final member = c.data.joinedUsers[idx];
                                   return CommunityMemberTile(
                                     member: member,
                                     showRemove: isEdit,
                                     onRemove: () =>
-                                        controller.removeMember(member.id),
+                                        controller.removeMember(member.id.toString()),
                                   );
                                 },
                               ),
@@ -350,7 +359,7 @@ class CommunityProfileScreen extends StatelessWidget {
                               width: double.infinity,
                               height: 52,
                               child: ElevatedButton(
-                                onPressed: controller.deleteCommunity,
+                                onPressed: ()=> controller.deleteCommunity(communityProfileModel.data.communityId),
                                 child: Text(
                                   AppStrings.deleteCommunity,
                                   style: TextStyle(

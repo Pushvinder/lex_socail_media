@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:the_friendz_zone/models/interest_response.dart';
 
 import '../../../config/app_config.dart';
@@ -156,15 +158,19 @@ class CreateCommunityScreen extends StatelessWidget {
               strokeWidth: 1,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
+                child: img.contains('http') ? ClipRRect(
+                  borderRadius: BorderRadius.circular(500.0),
+                  child: Image.network(img, height: 138,fit: BoxFit.cover,
+                    width: 138,),
+                ) : Container(
                   height: 138,
                   width: 138,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.bgColor,
-                    image: img != null
+                    image:   img != null && img != ''
                         ? DecorationImage(
-                            image: FileImage(img),
+                            image: FileImage(File(img)),
                             fit: BoxFit.cover,
                           )
                         : null,
@@ -177,7 +183,7 @@ class CreateCommunityScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: img == null
+                  child: img == null || img == ''
                       ? Padding(
                           padding: const EdgeInsets.all(48.0),
                           child: SizedBox(
@@ -203,12 +209,12 @@ class CreateCommunityScreen extends StatelessWidget {
 
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) {
-        // controller.clearData();
-        Get.delete<CreateCommunityController>();
-
-        Get.back();
-      },
+      // onPopInvoked: (didPop) {
+      //   // controller.clearData();
+      //   Get.delete<CreateCommunityController>();
+      //
+      //   Get.back();
+      // },
       child: Scaffold(
         backgroundColor: AppColors.scaffoldBackgroundColor,
         bottomNavigationBar:
@@ -241,7 +247,7 @@ class CreateCommunityScreen extends StatelessWidget {
                   elevation: 0,
                 ),
                 child: Text(
-                  AppStrings.createCommunityButton,
+                  controller.isUpdate.value ? AppStrings.createUpdateButton : AppStrings.createCommunityButton,
                   style: TextStyle(
                     color: AppColors.whiteColor.withOpacity(0.9),
                     fontSize: FontDimen.dimen15,
@@ -284,7 +290,7 @@ class CreateCommunityScreen extends StatelessWidget {
                     Expanded(
                       child: Center(
                         child: Text(
-                          AppStrings.createCommunityTitle,
+                          controller.isUpdate.value ? AppStrings.updateCommunityTitle :  AppStrings.createCommunityTitle,
                           style: TextStyle(
                             color: AppColors.textColor3.withOpacity(1),
                             fontSize: FontDimen.dimen18,

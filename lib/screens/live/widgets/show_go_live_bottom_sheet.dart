@@ -1,5 +1,8 @@
 import 'dart:ui';
+import 'package:the_friendz_zone/screens/live/live_stream_screen.dart';
+
 import '../../../config/app_config.dart';
+import '../../home/home_screen.dart';
 import '../live_controller.dart';
 
 void showGoLiveBottomSheet(
@@ -120,10 +123,12 @@ void showGoLiveBottomSheet(
                                 () => ElevatedButton(
                                   onPressed: controller.title.value.isEmpty
                                       ? null
-                                      : () {
+                                      : () async {
+                                          if(!await controller.checkPermission()){
+                                            return;
+                                          }
                                           onLive(controller.title.value);
                                           controller.clearTitle();
-                                          Navigator.of(context).pop();
                                         },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.transparent,

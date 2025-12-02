@@ -180,7 +180,7 @@ class ApiManager {
         }
 
         // Perform the request
-        var response = await request.send();
+        var response   = await request.send();
 
         // Wait for the response and convert the streamed response to a string
         final respStr = await response.stream.bytesToString();
