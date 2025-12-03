@@ -1,3 +1,5 @@
+import 'package:the_friendz_zone/screens/home/widgets/post_card_widget.dart';
+
 import '../../config/app_config.dart';
 import '../../widgets/bottom_nav_bar/bottom_nav_bar.dart';
 import '../../widgets/bottom_nav_bar/bottom_nav_controller.dart';
@@ -12,7 +14,6 @@ import 'home_controller.dart';
 import 'widgets/ad_banner_widget.dart';
 import 'widgets/connections_card_widget.dart';
 import 'widgets/live_users_list.dart';
-import 'widgets/post_card_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

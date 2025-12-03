@@ -64,6 +64,9 @@ dependencies:
   google_mobile_ads: ^6.0.0
   agora_rtc_engine: ^6.5.3
   agora_rtm: ^2.2.5
+  record: ^6.1.2
+  path_provider: ^2.1.5
+  audioplayers: ^6.5.1
 
 
 

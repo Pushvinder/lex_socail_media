@@ -1,7 +1,7 @@
 class SearchUserModel {
   SearchUserModel({
-      this.status, 
-      this.data,});
+    this.status,
+    this.data,});
 
   SearchUserModel.fromJson(dynamic json) {
     status = json['status'];
@@ -28,19 +28,21 @@ class SearchUserModel {
 
 class Data {
   Data({
-      this.id, 
-      this.username, 
-      this.fullname, 
-      this.profile, 
-      this.communities, 
-      this.interests, 
-      this.hobbies,});
+    this.id,
+    this.username,
+    this.fullname,
+    this.profile,
+    this.friendRequestStatus,
+    this.communities,
+    this.interests,
+    this.hobbies,});
 
   Data.fromJson(dynamic json) {
     id = json['id'];
     username = json['username'];
     fullname = json['fullname'];
     profile = json['profile'];
+    friendRequestStatus=json['friend_request_status'];
     communities = json['communities'] != null ? json['communities'].cast<String>() : [];
     if (json['interests'] != null) {
       interests = [];
@@ -59,6 +61,7 @@ class Data {
   dynamic username;
   String? fullname;
   String? profile;
+  String? friendRequestStatus;
   List<String>? communities;
   List<Interests>? interests;
   List<Hobbies>? hobbies;
@@ -69,6 +72,7 @@ class Data {
     map['username'] = username;
     map['fullname'] = fullname;
     map['profile'] = profile;
+    map['friend_request_status']=friendRequestStatus;
     map['communities'] = communities;
     if (interests != null) {
       map['interests'] = interests?.map((v) => v.toJson()).toList();
@@ -83,8 +87,8 @@ class Data {
 
 class Hobbies {
   Hobbies({
-      this.id, 
-      this.name,});
+    this.id,
+    this.name,});
 
   Hobbies.fromJson(dynamic json) {
     id = json['id'];
@@ -104,8 +108,8 @@ class Hobbies {
 
 class Interests {
   Interests({
-      this.id, 
-      this.name,});
+    this.id,
+    this.name,});
 
   Interests.fromJson(dynamic json) {
     id = json['id'];

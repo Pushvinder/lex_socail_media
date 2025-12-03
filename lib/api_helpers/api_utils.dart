@@ -64,5 +64,5 @@ class ApiUtils {
   static const String userProfileDetails = 'userProfileDetails';
   static const String socialLogin = 'Social_login';
   static const String sendRequest = 'send_request';
-
+  static const String viewChildDashboard = 'view_child_dashboard';
 }
