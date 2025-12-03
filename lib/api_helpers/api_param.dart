@@ -13,6 +13,7 @@ class ApiParam {
   static const String communityId = 'community_id';
   static const String hobbiesId = 'hobbie_id';
   static const String interestId = 'interest_id';
+  static const String removeId = 'remove_id';
   static const String username = 'username';
   static const String bio = 'bio';
   static const String dob = 'dob';

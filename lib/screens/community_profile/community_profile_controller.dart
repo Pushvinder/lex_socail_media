@@ -9,15 +9,38 @@ import 'models/community_profile_model.dart';
 class CommunityProfileController extends GetxController {
    // CommunityProfileModel? community;
 
+  var memberLoader = false.obs;
+
   @override
   void onInit() {
     super.onInit();
   }
 
-  void removeMember(String memberId) {
-    // community.members.removeWhere((m) => m.id == memberId);
-    update();
+  Future<void> removeMember(String memberId, String communityId, CommunityProfileModel communityProfileModel) async {
+    try {
+      int userId = StorageHelper().getUserId;
+      memberLoader.value = true;
+      var result = await ApiManager.callPostWithFormData(body: {
+        ApiParam.userId: '$userId',
+        ApiParam.communityId: communityId,
+        ApiParam.removeId: memberId,
+      }, endPoint: ApiUtils.removeCommunityUser);
+
+      VerifyOtpResponse response = VerifyOtpResponse.fromJson(
+          result);
+
+      if (response.status == "true") {
+        communityProfileModel.data.joinedUsers.removeWhere((t)=> t.id == memberId);
+        memberLoader.value = false;
+        update();
+      }
+    } catch (e, s) {
+      memberLoader.value = false;
+      update();
+      debugPrint('ERROR join COMMUNITY ${e.toString()} ,  $s');
+    }
   }
+
 
   void inviteMembers() {
     // invite logic
