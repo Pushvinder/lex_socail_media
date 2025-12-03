@@ -15,6 +15,7 @@ class BuyCoinsController extends GetxController {
     {'coins': '100000', 'price': '\$600.00'},
   ].obs;
 
+
   void selectIndex(int index) {
     print("Tapped index: $index");
     selectedIndex.value = index;
