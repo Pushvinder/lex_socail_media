@@ -11,8 +11,9 @@ import '../../../config/app_config.dart';
 import '../community_profile/models/community_profile_model.dart';
 
 class CreateCommunityController extends GetxController {
-   var communityImage = ''.obs;
-   var isUpdate = false.obs;
+  var communityImage = ''.obs;
+  var isUpdate = false.obs;
+  var communityId = '';
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -95,7 +96,7 @@ class CreateCommunityController extends GetxController {
               decoration: BoxDecoration(
                 color: AppColors.secondaryColor.withOpacity(0.8),
                 borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(24)),
+                const BorderRadius.vertical(top: Radius.circular(24)),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -123,7 +124,7 @@ class CreateCommunityController extends GetxController {
                     ctx,
                     Icons.camera_alt_rounded,
                     "Take a photo",
-                    () {
+                        () {
                       Navigator.pop(ctx);
                       pickImage(ImageSource.camera);
                     },
@@ -133,7 +134,7 @@ class CreateCommunityController extends GetxController {
                     ctx,
                     Icons.photo_library_rounded,
                     "Choose from gallery",
-                    () {
+                        () {
                       Navigator.pop(ctx);
                       pickImage(ImageSource.gallery);
                     },
@@ -141,7 +142,7 @@ class CreateCommunityController extends GetxController {
                   const SizedBox(height: 20),
                   Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: AppDimens.dimen20),
+                    EdgeInsets.symmetric(horizontal: AppDimens.dimen20),
                     child: SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
@@ -160,7 +161,9 @@ class CreateCommunityController extends GetxController {
                             color: AppColors.whiteColor,
                             fontSize: FontDimen.dimen14,
                             fontWeight: FontWeight.w500,
-                            fontFamily: GoogleFonts.inter().fontFamily,
+                            fontFamily: GoogleFonts
+                                .inter()
+                                .fontFamily,
                           ),
                         ),
                       ),
@@ -176,8 +179,8 @@ class CreateCommunityController extends GetxController {
     );
   }
 
-  Widget _buildBottomOption(
-      BuildContext context, IconData icon, String title, VoidCallback onTap) {
+  Widget _buildBottomOption(BuildContext context, IconData icon, String title,
+      VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
       child: Padding(
@@ -201,7 +204,9 @@ class CreateCommunityController extends GetxController {
                 color: AppColors.whiteColor,
                 fontSize: FontDimen.dimen14,
                 fontWeight: FontWeight.w500,
-                fontFamily: GoogleFonts.inter().fontFamily,
+                fontFamily: GoogleFonts
+                    .inter()
+                    .fontFamily,
               ),
             ),
           ],
@@ -222,10 +227,16 @@ class CreateCommunityController extends GetxController {
   /// Validation logic similar to profile_info_controller.dart
   void validateForm() async {
     final bool hasImage = communityImage.value != null;
-    final bool hasName = nameController.text.trim().isNotEmpty;
+    final bool hasName = nameController.text
+        .trim()
+        .isNotEmpty;
     final bool hasCategory = selectedCategories.isNotEmpty;
-    final bool hasDescription = descriptionController.text.trim().isNotEmpty;
-    final bool hasRules = rulesController.text.trim().isNotEmpty;
+    final bool hasDescription = descriptionController.text
+        .trim()
+        .isNotEmpty;
+    final bool hasRules = rulesController.text
+        .trim()
+        .isNotEmpty;
 
     isFormValid.value =
         hasImage && hasName && hasCategory && hasDescription && hasRules;
@@ -245,7 +256,9 @@ class CreateCommunityController extends GetxController {
       );
       return;
     }
-    if (nameController.text.trim().isEmpty) {
+    if (nameController.text
+        .trim()
+        .isEmpty) {
       Get.snackbar(
         AppStrings.error,
         ErrorMessages.communityName,
@@ -269,7 +282,9 @@ class CreateCommunityController extends GetxController {
       );
       return;
     }
-    if (descriptionController.text.trim().isEmpty) {
+    if (descriptionController.text
+        .trim()
+        .isEmpty) {
       Get.snackbar(
         AppStrings.error,
         ErrorMessages.communityDescription,
@@ -281,7 +296,9 @@ class CreateCommunityController extends GetxController {
       );
       return;
     }
-    if (rulesController.text.trim().isEmpty) {
+    if (rulesController.text
+        .trim()
+        .isEmpty) {
       Get.snackbar(
         AppStrings.error,
         ErrorMessages.communityRules,
@@ -299,10 +316,10 @@ class CreateCommunityController extends GetxController {
 
     if (response != null && response.status == AppStrings.apiSuccess) {
       AppLoader.hide();
-      Get.back();
+      Get.back(result: 'updated');
       Get.snackbar(
         AppStrings.success,
-        AppStrings.communitCreateSuccess,
+       isUpdate.value ? AppStrings.communitUpdatedSuccess:  AppStrings.communitCreateSuccess,
         colorText: AppColors.whiteColor,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: AppColors.successSnackbarColor.withOpacity(0.7),
@@ -322,9 +339,6 @@ class CreateCommunityController extends GetxController {
       return;
     }
 
-    // All validations passed
-
-    // TODO: Add your actual community creation logic here
   }
 
   Future<VerifyOtpResponse?> _createCommunity() async {
@@ -333,17 +347,24 @@ class CreateCommunityController extends GetxController {
       // creating a temp list of selected interest ids
       List<int> ids = [];
       selectedCategories.map((e) => ids.add(e.id ?? 0)).toList();
+
+      var request = {
+        ApiParam.userId: '$userId',
+        ApiParam.nameCommunity: nameController.text.trim(),
+        ApiParam.communityDescription: descriptionController.text.trim(),
+        ApiParam.communityRules: rulesController.text.trim(),
+        "${ApiParam.categoryId}[]": ids,
+      };
+
+      if(isUpdate.value){
+        request[ApiParam.communityId] = communityId;
+      }
+
       var result = await ApiManager.callPostWithFormData(
-          body: {
-            ApiParam.userId: '$userId',
-            ApiParam.nameCommunity: nameController.text.trim(),
-            ApiParam.communityDescription: descriptionController.text.trim(),
-            ApiParam.communityRules: rulesController.text.trim(),
-            "${ApiParam.categoryId}[]": ids,
-          },
-          endPoint: ApiUtils.createCommunity,
+          body: request,
+          endPoint: isUpdate.value ? ApiUtils.updaetCommunity : ApiUtils.createCommunity,
           fileKey: ApiParam.image,
-          filePaths: [communityImage.value ?? '']);
+          filePaths: [communityImage.value.contains('http') ? '' : communityImage.value ?? '']);
 
       VerifyOtpResponse response = VerifyOtpResponse.fromJson(result);
       AppLoader.hide();
@@ -368,19 +389,35 @@ class CreateCommunityController extends GetxController {
       if (response != null && response.data != null) {
         categoriesList.value = response.data ?? [];
         categoriesList.refresh();
+        if (Get.arguments != null) {
+          updateCategoris();
+        }
       }
     } catch (e) {}
   }
 
   void prefilledData() {
-    if(Get.arguments != null){
+    if (Get.arguments != null) {
       isUpdate.value = true;
+      communityId = Get.arguments.data.communityId;
       CommunityProfileModel communityProfileModel = Get.arguments;
       communityImage.value = communityProfileModel.data.communityProfile;
       nameController.text = communityProfileModel.data.communityName;
-      descriptionController.text = communityProfileModel.data.communityDescription;
+      descriptionController.text =
+          communityProfileModel.data.communityDescription;
       rulesController.text = communityProfileModel.data.communityRules;
+    }
+  }
 
+  void updateCategoris() {
+    CommunityProfileModel communityProfileModel = Get.arguments;
+    for (var item in communityProfileModel.data.communitiesList) {
+      for (var item2 in categoriesList) {
+        if (item.communityId == item2.id) {
+          selectedCategories.add(item2);
+        }
+      }
     }
   }
 }
+

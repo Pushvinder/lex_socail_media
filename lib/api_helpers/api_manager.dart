@@ -128,9 +128,10 @@ class ApiManager {
           if (value is List) {
             if (key.endsWith('[]')) {
               // Send as repeated form fields: category_id[]=1, category_id[]=2
-              for (var item in value) {
-                request.fields.addAll({key: item.toString()});
-              }
+                request.fields.addAll({key: jsonEncode(value)});
+              // for (var item in value) {
+              //   request.fields.addAll({key: item.toString()});
+              // }
             } else {
               // Send as a single comma-separated string: "1,2,3"
               request.fields[key] = value.join(',');

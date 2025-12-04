@@ -5,23 +5,24 @@ import 'widgets/community_member_tile.dart';
 
 class CommunityProfileScreen extends StatelessWidget {
   final bool isEdit;
-  final CommunityProfileModel communityProfileModel;
+  final CommunityProfileModel community;
 
   const CommunityProfileScreen(
-      {Key? key, this.isEdit = false, required this.communityProfileModel})
+      {Key? key, this.isEdit = false, required this.community})
       : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<CommunityProfileController>(
-      init: CommunityProfileController(),
+      init: CommunityProfileController()..initializedData(community),
       builder: (controller) {
-        var c = communityProfileModel;
+        var c = controller.communityProfileModel;
 
         return Scaffold(
           backgroundColor: AppColors.scaffoldBackgroundColor,
           body: SafeArea(
-            child: communityProfileModel == null
+            child: controller.communityProfileModel == null
                 ? Center(
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
@@ -70,7 +71,7 @@ class CommunityProfileScreen extends StatelessWidget {
                             if (isEdit)
                               GestureDetector(
                                 onTap: () => controller
-                                    .editCommunity(communityProfileModel),
+                                    .editCommunity(controller.communityProfileModel),
                                 child: Padding(
                                   padding: const EdgeInsets.only(right: 6),
                                   child: Image.asset(
@@ -276,7 +277,7 @@ class CommunityProfileScreen extends StatelessWidget {
                                             ),
                                             SizedBox(width: AppDimens.dimen6),
                                             Text(
-                                              "${c!.data.totalJoinedUsers >= 1000 ? '${(c.data.totalJoinedUsers / 1000).toStringAsFixed(1)}K' : c.data.totalJoinedUsers}",
+                                              "${controller.membersList.length >= 1000 ? '${(controller.membersList.length / 1000).toStringAsFixed(1)}K' : controller.membersList.length}",
                                               style: TextStyle(
                                                 color: AppColors.textColor3
                                                     .withOpacity(1),
@@ -297,17 +298,15 @@ class CommunityProfileScreen extends StatelessWidget {
                                       physics:
                                           const NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
-                                      itemCount: c.data.joinedUsers.length,
+                                      itemCount: controller.membersList.length,
                                       itemBuilder: (context, idx) {
-                                        final member = c.data.joinedUsers[idx];
+                                        final member = controller.membersList[idx];
                                         return CommunityMemberTile(
                                           member: member,
                                           showRemove: isEdit,
+                                          loader: controller.loaderId.value == member.id.toString(),
                                           onRemove: () =>
-                                              controller.removeMember(
-                                                  member.id.toString(),
-                                                  communityProfileModel
-                                                      .data.communityId, communityProfileModel),
+                                              controller.removeMember(member.id.toString(), controller.communityProfileModel.data.communityId),
                                         );
                                       },
                                     ),
@@ -382,7 +381,7 @@ class CommunityProfileScreen extends StatelessWidget {
                                     height: 52,
                                     child: ElevatedButton(
                                       onPressed: () => controller
-                                          .deleteCommunity(communityProfileModel
+                                          .deleteCommunity(controller.communityProfileModel
                                               .data.communityId),
                                       child: Text(
                                         AppStrings.deleteCommunity,
