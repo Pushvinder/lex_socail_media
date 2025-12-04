@@ -7,7 +7,7 @@ class AppHelper {
   static init() async {
     WidgetsFlutterBinding.ensureInitialized();
 
-    // Load .env
+    // Load ..env
     await EnvConfig.load();
 
     await GetStorage.init();

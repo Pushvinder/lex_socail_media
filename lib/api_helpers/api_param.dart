@@ -40,8 +40,12 @@ class ApiParam {
   static const String type = "type";
   static const String parentId = "parent_id";
   static const String childId = "child_id";
+  static const String linkChildId="child[]";
   static String fcmToken = "fcm_token";
   static String interest = "interest";
   static String hobbies = "hobbies";
   static String hobby = "hobby";
+  static const String callerId = 'caller_id';
+  static const String callType = 'call_type';
+  static const String callId = 'call_id';
 }

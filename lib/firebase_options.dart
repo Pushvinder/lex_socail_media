@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,15 +25,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -65,4 +56,32 @@ class DefaultFirebaseOptions {
     storageBucket: 'the-friend-zone-6b17a.firebasestorage.app',
     iosBundleId: 'com.allied.thefriendzzone',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyC0URFdiHJbtWjI6lsRGYujGQ5-YQjVqdY',
+    appId: '1:541647583246:web:07c44d915993b0f2f4645f',
+    messagingSenderId: '541647583246',
+    projectId: 'the-friend-zone-6b17a',
+    authDomain: 'the-friend-zone-6b17a.firebaseapp.com',
+    storageBucket: 'the-friend-zone-6b17a.firebasestorage.app',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyC7A4XX6PBeL-ur2rHpnvz2KoFN-fSE_84',
+    appId: '1:541647583246:ios:249ce04e5b086141f4645f',
+    messagingSenderId: '541647583246',
+    projectId: 'the-friend-zone-6b17a',
+    storageBucket: 'the-friend-zone-6b17a.firebasestorage.app',
+    iosBundleId: 'com.example.theFriendzZone',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyC0URFdiHJbtWjI6lsRGYujGQ5-YQjVqdY',
+    appId: '1:541647583246:web:f64e176b75460000f4645f',
+    messagingSenderId: '541647583246',
+    projectId: 'the-friend-zone-6b17a',
+    authDomain: 'the-friend-zone-6b17a.firebaseapp.com',
+    storageBucket: 'the-friend-zone-6b17a.firebasestorage.app',
+  );
+
 }

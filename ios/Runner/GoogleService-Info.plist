@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyC7A4XX6PBeL-ur2rHpnvz2KoFN-fSE_84</string>
+	<key>GCM_SENDER_ID</key>
+	<string>541647583246</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.allied.thefriendzzone</string>
+	<key>PROJECT_ID</key>
+	<string>the-friend-zone-6b17a</string>
+	<key>STORAGE_BUCKET</key>
+	<string>the-friend-zone-6b17a.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:541647583246:ios:4ef3e260b648330cf4645f</string>
+</dict>
+</plist>

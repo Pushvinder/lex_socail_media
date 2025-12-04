@@ -65,5 +65,7 @@ class ApiUtils {
   static const String socialLogin = 'Social_login';
   static const String sendRequest = 'send_request';
   static const String removeCommunityUser = 'remove_community_user';
-
+  static const String viewChildDashboard = 'view_child_dashboard';
+  static const String createCall = 'create_call';
+  static const String endCall = 'end_call';
 }

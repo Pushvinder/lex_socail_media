@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:the_friendz_zone/api_helpers/api_param.dart';
 import 'package:the_friendz_zone/models/connection_list_response.dart';
@@ -7,15 +8,17 @@ import 'package:the_friendz_zone/screens/profile/profile_controller.dart';
 import 'package:the_friendz_zone/utils/app_loader.dart';
 
 import '../../config/app_config.dart';
+import '../../utils/firebase_utils.dart';
 import '../profile/models/user_response.dart';
 import '../requests/models/pending_user_request_response.dart';
+import '../user_profile/user_presence_service.dart';
 import 'models/connection_user_model.dart';
 import 'models/live_user.dart';
 import 'models/post_model.dart';
 
 class HomeController extends GetxController {
   final RxInt selectedTabIndex = 0.obs;
-
+  final UserPresenceService _presenceService = UserPresenceService();
   final RxList<ConnectionData> connections = <ConnectionData>[].obs;
 
   final RxList<Posts> posts = <Posts>[].obs;
@@ -105,7 +108,15 @@ class HomeController extends GetxController {
     _getPendingRequestList();
     getProfileDetails();
     loadAd();
+    _presenceService.initializePresence();
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    // ✅ Set user offline when logging out or closing app
+    _presenceService.setUserOffline();
+    super.onClose();
   }
 
   Future<void> getProfileDetails() async {
@@ -114,8 +125,7 @@ class HomeController extends GetxController {
       int userId = StorageHelper().getUserId;
       var result = await ApiManager.callPostWithFormData(
           body: {ApiParam.id: "$userId"}, endPoint: ApiUtils.getProfileDetail);
-       userResponse = UserResponse.fromJson(result);
-
+      userResponse = UserResponse.fromJson(result);
     } catch (e) {
       AppLoader.hide();
       debugPrint('error user details api ${e.toString()}');
@@ -164,6 +174,29 @@ class HomeController extends GetxController {
       }
     } catch (e) {
       debugPrint('getting error in home conenction list api ${e.toString()}');
+    }
+  }
+
+  // Add to HomeController or initialization code
+  Future<void> initializeCurrentUserInFirebase() async {
+    try {
+      final userId = StorageHelper().getUserId.toString();
+      final userName = userResponse.data?.fullname ?? '';
+      final userProfile = userResponse.data?.profile ?? '';
+
+      if (userId.isNotEmpty && userName.isNotEmpty) {
+        await FirebaseFirestore.instance
+            .collection(FirebaseUtils.users)
+            .doc(userId)
+            .set({
+          'id': userId,
+          'fullname': userName,
+          'profile': userProfile,
+          'lastSeen': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
+      }
+    } catch (e) {
+      debugPrint('Error initializing user in Firebase: $e');
     }
   }
 
@@ -220,7 +253,8 @@ class HomeController extends GetxController {
         endPoint: ApiUtils.pendingUserRequest,
       );
 
-      PendingUserRequestResponse pendingUserRequestResponse = PendingUserRequestResponse.fromJson(result);
+      PendingUserRequestResponse pendingUserRequestResponse =
+          PendingUserRequestResponse.fromJson(result);
       if (pendingUserRequestResponse.status == AppStrings.apiSuccess) {
         requests.value = pendingUserRequestResponse.data ?? [];
         requests.refresh();
@@ -233,9 +267,6 @@ class HomeController extends GetxController {
       return null;
     }
   }
-
-
-
 
   // delete post api
   Future<void> deletePost(String postId, int postRemoveIndex) async {
@@ -358,7 +389,7 @@ class HomeController extends GetxController {
     BannerAd(
       adUnitId: "ca-app-pub-3940256099942544/9214589741",
       request: const AdRequest(),
-      size: AdSize(width : Get.width.toInt(), height:  50),
+      size: AdSize(width: Get.width.toInt(), height: 50),
       listener: BannerAdListener(
         onAdLoaded: (ad) {
           bannerAds = ad as BannerAd;
@@ -370,5 +401,4 @@ class HomeController extends GetxController {
       ),
     ).load();
   }
-
 }

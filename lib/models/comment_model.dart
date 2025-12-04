@@ -1,9 +1,9 @@
 class CommentModel {
   CommentModel({
-      this.status, 
-      this.message, 
-      this.totalCount, 
-      this.data,});
+    this.status,
+    this.message,
+    this.totalCount,
+    this.data,});
 
   CommentModel.fromJson(dynamic json) {
     status = json['status'];
@@ -36,28 +36,33 @@ class CommentModel {
 
 class Data {
   Data({
-      this.id, 
-      this.comment, 
-      this.name, 
-      this.image,});
+    this.id,
+    this.comment,
+    this.name,
+    this.image,
+    this.created_at,
+  });
 
   Data.fromJson(dynamic json) {
     id = json['id'];
     comment = json['comment'];
-    name = json['name'];
+    name = json['fullname'];
     image = json['image'];
+    created_at=json['created_at'];
   }
   String? id;
   String? comment;
   String? name;
   String? image;
+  String? created_at;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
     map['comment'] = comment;
-    map['name'] = name;
+    map['fullname'] = name;
     map['image'] = image;
+    map['created_at']=created_at;
     return map;
   }
 
