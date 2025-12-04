@@ -1,4 +1,5 @@
 import 'package:the_friendz_zone/screens/editProfile/edit_profile_info_screen/edit_profile_info_screen.dart';
+import 'package:the_friendz_zone/screens/withdraw_coins/withdraw_coins_screen.dart';
 
 import '../../../config/app_config.dart';
 import '../../../widgets/custom_bottom_sheet.dart';
@@ -29,7 +30,9 @@ class ProfileHeader extends StatelessWidget {
               vertical: 12,
             ),
           ),
-          onPressed: () {},
+          onPressed: () {
+            Get.to(() =>  WithdrawCoinsScreen());
+          },
           child: Text(
             AppStrings.withdrawCoins,
             style: GoogleFonts.inter(

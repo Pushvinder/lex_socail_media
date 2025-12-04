@@ -299,6 +299,7 @@ class AppStrings {
   static const String description = "Description";
   static const String rulesOfCommunity = "Rules of Community";
   static const String inviteMembers = "Invite Members";
+  static const String invite = "Invite";
   static const String remove = "Remove";
 
   // Validation and picker
@@ -363,6 +364,10 @@ class AppStrings {
   static const String videos = 'Videos';
   static const String editProfile = 'Edit Profile';
   static const String withdrawCoins = 'Withdraw Coins';
+  static const String requestWithdrawal = 'Request Withdrawal';
+  static const String sendWithdrawalRequest = 'Send Withdrawal Request';
+  static const String selectNumberCoins = 'Select the number of coins you want to withdraw';
+
   static const dialogEditProfileMessage =
       "Update your profile information and save changes.";
   static const dialogSettingsMessage =
@@ -488,6 +493,7 @@ class AppStrings {
   static const String infoSaveSuccess =
       "Personal information saved successfully";
   static const String communitCreateSuccess = "Community created successfully!";
+  static const String communitUpdatedSuccess = "Community updated successfully!";
   static const String joinPendingStatus = 'pending';
   static const String joinAcceptedStatus = 'accepted';
   static const String joinRejectedStatus = 'rejected';

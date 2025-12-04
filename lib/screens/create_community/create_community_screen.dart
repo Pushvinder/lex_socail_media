@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:the_friendz_zone/models/interest_response.dart';
 
 import '../../../config/app_config.dart';
@@ -145,6 +146,41 @@ class CreateCommunityScreen extends StatelessWidget {
       );
     }
 
+    Widget placeholderWidget(){
+      return Container(
+          height: 138,
+          width: 138,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: AppColors.bgColor,
+            image:   null,
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.textColor3.withOpacity(0.05),
+                spreadRadius: 1,
+                blurRadius: 15,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(48.0),
+            child: SizedBox(
+              height: 18,
+              width: 18,
+              child: Image.asset(
+                AppImages.profilePicIcon,
+                height: 18,
+                width: 18,
+                fit: BoxFit.contain,
+                // color: AppColors.textColor3,
+              ),
+            ),
+          )
+
+      );
+    }
+
     Widget _buildDashedCirclePhotoPicker() {
       return Obx(
         () {
@@ -159,9 +195,19 @@ class CreateCommunityScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: img.contains('http') ? ClipRRect(
-                  borderRadius: BorderRadius.circular(500.0),
-                  child: Image.network(img, height: 138,fit: BoxFit.cover,
-                    width: 138,),
+                  borderRadius: BorderRadius.circular(100),
+                  child: CachedNetworkImage(
+                    imageUrl: img,
+                    width: 130,
+                    height: 130,
+                    fit: BoxFit.cover,
+                    placeholder: (ctx, _) => Container(
+                      color: AppColors.greyShadeColor,
+                    ),
+                    errorWidget: (ctx, url, error) {
+                      return placeholderWidget();
+                    },
+                  ),
                 ) : Container(
                   height: 138,
                   width: 138,
@@ -206,6 +252,8 @@ class CreateCommunityScreen extends StatelessWidget {
         },
       );
     }
+
+
 
     return PopScope(
       canPop: false,

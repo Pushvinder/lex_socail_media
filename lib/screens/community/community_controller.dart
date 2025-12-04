@@ -290,7 +290,7 @@ class CommunityController extends GetxController {
       if (response.status == AppStrings.apiSuccess && response.data != null) {
         AppLoader.hide();
         Get.to(() => CommunityProfileScreen(
-          isEdit: true,communityProfileModel: response,
+          isEdit: true,community: response,
         ));
       }
     } catch (e, s) {

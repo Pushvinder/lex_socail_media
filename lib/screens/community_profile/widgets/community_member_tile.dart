@@ -7,13 +7,15 @@ class CommunityMemberTile extends StatelessWidget {
   final JoinedUser member;
   final bool showRemove;
   final VoidCallback onRemove;
+  final bool loader;
 
-  const CommunityMemberTile({
-    Key? key,
-    required this.member,
-    this.showRemove = true,
-    required this.onRemove,
-  }) : super(key: key);
+  const CommunityMemberTile(
+      {Key? key,
+      required this.member,
+      this.showRemove = true,
+      required this.onRemove,
+      required this.loader})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -63,32 +65,44 @@ class CommunityMemberTile extends StatelessWidget {
           ),
           // Remove Button
           showRemove
-              ? OutlinedButton(
-                  onPressed: onRemove,
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(
-                      color: AppColors.textColor4.withOpacity(1),
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppDimens.dimen8),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppDimens.dimen14,
-                      vertical: 0,
-                    ),
-                    visualDensity: VisualDensity.compact,
-                  ),
-                  child: Text(
-                    AppStrings.remove,
-                    style: TextStyle(
-                      color: AppColors.textColor4.withOpacity(1),
-                      fontFamily: GoogleFonts.inter().fontFamily,
-                      fontWeight: FontWeight.w500,
-                      fontSize: FontDimen.dimen13,
-                      height: 0.9,
-                    ),
-                  ),
-                )
+              ? loader
+                  ? Padding(
+                      padding: EdgeInsets.only(right: 20),
+                      child: SizedBox(
+                        height: 25,
+                        width: 25,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 5,
+                          color: AppColors.textColor5.withOpacity(0.65),
+                        ),
+                      ),
+                    )
+                  : OutlinedButton(
+                      onPressed: onRemove,
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(
+                          color: AppColors.textColor4.withOpacity(1),
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(AppDimens.dimen8),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppDimens.dimen14,
+                          vertical: 0,
+                        ),
+                        visualDensity: VisualDensity.compact,
+                      ),
+                      child: Text(
+                        AppStrings.remove,
+                        style: TextStyle(
+                          color: AppColors.textColor4.withOpacity(1),
+                          fontFamily: GoogleFonts.inter().fontFamily,
+                          fontWeight: FontWeight.w500,
+                          fontSize: FontDimen.dimen13,
+                          height: 0.9,
+                        ),
+                      ),
+                    )
               : const SizedBox.shrink(),
         ],
       ),

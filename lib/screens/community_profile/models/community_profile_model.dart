@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final communityProfileModel = communityProfileModelFromJson(jsonString);
+
 import 'dart:convert';
 
 CommunityProfileModel communityProfileModelFromJson(String str) => CommunityProfileModel.fromJson(json.decode(str));
@@ -31,9 +35,10 @@ class Data {
   String communityRules;
   String communityDescription;
   DateTime createdOn;
-  List<String> recentPostImages;
+  List<dynamic> recentPostImages;
   int totalJoinedUsers;
   List<JoinedUser> joinedUsers;
+  List<CommunitiesList> communitiesList;
 
   Data({
     required this.communityId,
@@ -45,6 +50,7 @@ class Data {
     required this.recentPostImages,
     required this.totalJoinedUsers,
     required this.joinedUsers,
+    required this.communitiesList,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -54,9 +60,10 @@ class Data {
     communityRules: json["community_rules"],
     communityDescription: json["community_description"],
     createdOn: DateTime.parse(json["created_on"]),
-    recentPostImages: List<String>.from(json["recent_post_images"].map((x) => x)),
+    recentPostImages: List<dynamic>.from(json["recent_post_images"].map((x) => x)),
     totalJoinedUsers: json["total_joined_users"],
     joinedUsers: List<JoinedUser>.from(json["joined_users"].map((x) => JoinedUser.fromJson(x))),
+    communitiesList: List<CommunitiesList>.from(json["communities_list"].map((x) => CommunitiesList.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -69,6 +76,27 @@ class Data {
     "recent_post_images": List<dynamic>.from(recentPostImages.map((x) => x)),
     "total_joined_users": totalJoinedUsers,
     "joined_users": List<dynamic>.from(joinedUsers.map((x) => x.toJson())),
+    "communities_list": List<dynamic>.from(communitiesList.map((x) => x.toJson())),
+  };
+}
+
+class CommunitiesList {
+  int communityId;
+  String communityName;
+
+  CommunitiesList({
+    required this.communityId,
+    required this.communityName,
+  });
+
+  factory CommunitiesList.fromJson(Map<String, dynamic> json) => CommunitiesList(
+    communityId: json["community_id"],
+    communityName: json["community_name"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "community_id": communityId,
+    "community_name": communityName,
   };
 }
 
