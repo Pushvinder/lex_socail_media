@@ -398,6 +398,7 @@ class HomeController extends GetxController {
         onAdFailedToLoad: (ad, err) {
           ad.dispose();
         },
+
       ),
     ).load();
   }
