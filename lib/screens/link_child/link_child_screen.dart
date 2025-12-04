@@ -110,21 +110,41 @@ class LinkChildAccountScreen extends StatelessWidget {
             // --- List ---
             Expanded(
               child: Obx(
-                () => ListView.builder(
-                  padding: EdgeInsets.zero,
-                  itemCount: controller.filteredUsers.length,
-                  itemBuilder: (context, index) {
-                    final user = controller.filteredUsers[index];
-                    return Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: AppDimens.dimen16),
-                      child: LinkChildItem(
-                        user: user,
-                        onTap: () => controller.toggleSelect(index),
-                      ),
-                    );
-                  },
-                ),
+                () => controller.isLoadingFriendsList.value
+                    ? Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.textColor5.withOpacity(0.65),
+                        ),
+                      )
+                    : controller.filteredUsers.isEmpty
+                        ? Center(
+                            child: Text(
+                              controller.isSearching.value
+                                  ? 'No users found'
+                                  : 'No friends available',
+                              style: TextStyle(
+                                color: AppColors.textColor3.withOpacity(0.7),
+                                fontFamily: GoogleFonts.inter().fontFamily,
+                                fontSize: FontDimen.dimen14,
+                              ),
+                            ),
+                          )
+                        : ListView.builder(
+                            padding: EdgeInsets.zero,
+                            itemCount: controller.filteredUsers.length,
+                            itemBuilder: (context, index) {
+                              final user = controller.filteredUsers[index];
+                              return Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: AppDimens.dimen16),
+                                child: LinkChildItem(
+                                  user: user,
+                                  onTap: () => controller.toggleSelect(index),
+                                ),
+                              );
+                            },
+                          ),
               ),
             ),
 
@@ -145,10 +165,10 @@ class LinkChildAccountScreen extends StatelessWidget {
                         AppColors.primaryColor,
                         AppColors.primaryColorShade,
                       ],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
                     ),
-                    borderRadius: BorderRadius.circular(AppDimens.dimen16),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
                     child: Text(

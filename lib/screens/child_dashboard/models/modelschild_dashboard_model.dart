@@ -7,9 +7,9 @@ class ChildDashboardModel {
   final List<String> interests;
   final int postsCount;
   final int connectionsCount;
-  final List<ActivityItem> recentActivities;
-  final String postVisibility;
-  final String contentAgeRestriction;
+  List<ActivityItem> recentActivities;
+  String postVisibility;
+  String contentAgeRestriction;
 
   ChildDashboardModel({
     required this.username,

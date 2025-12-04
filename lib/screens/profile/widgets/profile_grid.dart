@@ -5,8 +5,11 @@ import '../../../widgets/full_screen_image_viewer.dart';
 import '../profile_controller.dart';
 
 class ProfileGrid extends StatelessWidget {
-  final ProfileController controller;
-  const ProfileGrid({required this.controller, Key? key,}) : super(key: key);
+  ProfileGrid({
+    Key? key,
+  }) : super(key: key);
+
+  final ProfileController controller = Get.find<ProfileController>();
 
   Widget _buildGridLoadingPlaceholder() {
     return Container(
@@ -22,6 +25,7 @@ class ProfileGrid extends StatelessWidget {
       ),
     );
   }
+
 
   Widget _buildGridErrorPlaceholder(String message) {
     return Container(
@@ -42,9 +46,25 @@ class ProfileGrid extends StatelessWidget {
     );
   }
 
+
+  Widget _noPostError(String message) {
+    return SliverToBoxAdapter(
+      child:
+       Center(
+        child: Text(
+      message
+          // color: AppColors.textColor5.withOpacity(0.65),
+        ),
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
-    return Obx(() => SliverPadding(
+    return Obx(() => 
+    (controller.isPhotosTab.value && controller.imagePostList.isEmpty ) || (!controller.isPhotosTab.value && controller.videoPostList.isEmpty) ?
+ _noPostError(ErrorMessages.noPostError)
+    :
+    SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           sliver: SliverGrid(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -54,28 +74,31 @@ class ProfileGrid extends StatelessWidget {
               childAspectRatio: 1,
             ),
             delegate: SliverChildBuilderDelegate(
+              childCount:
+              controller.isPhotosTab.value ? controller.imagePostList.value.length : controller.videoPostList.value.length,
               (BuildContext context, int index) {
+                // return Container();
                 if (controller.isPhotosTab.value) {
-                  if (index >= controller.user.photos.length)
+                  if (index >= controller.imagePostList.length)
                     return const SizedBox.shrink();
-                  final imageUrl = controller.user.photos[index];
+                  final imageUrl = controller.imagePostList[index].postImages?[0];
                   return GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (_) => FullScreenImageViewer(
-                            images: controller.user.photos,
+                            images: controller.imagePostList[index].postImages ?? [],
                             initialIndex: index,
                           ),
                         ),
                       );
                     },
                     child: Hero(
-                      tag: imageUrl,
+                      tag: imageUrl ?? '',
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(5),
                         child: CachedNetworkImage(
-                          imageUrl: imageUrl,
+                          imageUrl: imageUrl ?? '',
                           fit: BoxFit.cover,
                           placeholder: (context, url) =>
                               _buildGridLoadingPlaceholder(),
@@ -86,7 +109,8 @@ class ProfileGrid extends StatelessWidget {
                     ),
                   );
                 } else {
-                  if (index >= controller.user.videos.length ||
+                  // return _buildGridErrorPlaceholder("Controller error");
+                  if (index >= controller.videoPostList.length ||
                       index >= controller.videoControllers.length ||
                       index >= controller.isVideoInitialized.length ||
                       index >= controller.isVideoError.length) {
@@ -117,7 +141,8 @@ class ProfileGrid extends StatelessWidget {
                           if (isInitialized && !videoController.value.isPlaying)
                             GestureDetector(
                               onTap: () {
-                                videoController.play();
+                                // videoController.play();
+                                videoController.pause();
                               },
                               child: Container(
                                 color: Colors.black.withOpacity(0.3),
@@ -138,9 +163,7 @@ class ProfileGrid extends StatelessWidget {
                   }
                 }
               },
-              childCount: controller.isPhotosTab.value
-                  ? controller.user.photos.length
-                  : controller.user.videos.length,
+             
             ),
           ),
         ));

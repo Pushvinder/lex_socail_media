@@ -37,7 +37,7 @@ class CreatePostTabButton extends StatelessWidget {
             style: TextStyle(
               color: selected
                   ? AppColors.whiteColor
-                  : AppColors.textColor3.withOpacity(0.7),
+                  : AppColors.whiteColor.withOpacity(0.5),
               fontFamily: GoogleFonts.inter().fontFamily,
               fontSize: FontDimen.dimen11,
               fontWeight: FontWeight.w500,
