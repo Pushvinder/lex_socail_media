@@ -22,4 +22,12 @@ class StorageHelper {
 
   set setUserId(int value) => storage.write("userId", value);
   int get getUserId => storage.read('userId') ?? -1;
+
+  // ✅ NEW: FCM Token storage
+  set setFcmToken(String value) => storage.write("fcmToken", value);
+  String get getFcmToken => storage.read('fcmToken') ?? '';
+
+  // ✅ NEW: User Email storage (needed for Firestore registration)
+  set setUserEmail(String value) => storage.write("userEmail", value);
+  String get getUserEmail => storage.read('userEmail') ?? '';
 }

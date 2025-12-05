@@ -2,6 +2,7 @@ import '../../config/app_config.dart';
 import '../../widgets/bottom_nav_bar/bottom_nav_bar.dart';
 import '../../widgets/bottom_nav_bar/bottom_nav_controller.dart';
 import '../home/home_screen.dart';
+import 'callHistory/callHistory_screen.dart';
 import 'chat_screen.dart';
 import 'message_controller.dart';
 import 'widgets/message_tile.dart';
@@ -153,7 +154,9 @@ class MessageScreen extends StatelessWidget {
             child: FloatingActionButton(
               backgroundColor: Colors.transparent,
               elevation: 0,
-              onPressed: () {},
+              onPressed: () {
+                Get.to(() => CallHistoryScreen());
+              },
               shape: const CircleBorder(),
               child: Container(
                 decoration: BoxDecoration(

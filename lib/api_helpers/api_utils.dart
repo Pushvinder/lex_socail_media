@@ -29,6 +29,7 @@ class ApiUtils {
   static const String userAgeContentUpdate = 'user_age_content_update';
   static const String userPostVisibilityUpdate = 'user_post_visibility_update';
   static const String notification = 'notification';
+  static const String getNotification = 'get_notifications';
   static const String createProfile = 'create_profile';
   static const String updateInterest = 'update_interest';
   static const String updateHobbies = 'update_hobbies';
@@ -68,4 +69,5 @@ class ApiUtils {
   static const String viewChildDashboard = 'view_child_dashboard';
   static const String createCall = 'create_call';
   static const String endCall = 'end_call';
+  static const String getCallHistory = 'get_call_history';
 }

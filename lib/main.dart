@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:the_friendz_zone/firebase_options.dart';
+import 'package:the_friendz_zone/screens/notifications/firebase/firebase_push_notification_config.dart';
 import 'config/app_config.dart';
 import 'controllers/select_user_controller.dart';
 import 'screens/splash_screen/splash_screen.dart';
@@ -14,7 +15,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-);
+  );
+  await FirebasePushNotificationConfig.configureNotifications();
   await AppHelper.init();
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(

@@ -54,13 +54,13 @@ dependencies:
   permission_handler: ^12.0.1
   video_player: ^2.9.1
   intl: ^0.20.2
-  firebase_core: ^3.14.0
+  firebase_core: ^3.15.2
   google_sign_in: ^7.1.0
   firebase_auth: ^5.6.2
   sign_in_with_apple: ^7.0.1
-  cloud_firestore: ^5.6.11
+  cloud_firestore: ^5.6.12
   firebase_storage: ^12.4.9
-  flutter_local_notifications: ^19.3.0
+  flutter_local_notifications: ^19.5.0
   google_mobile_ads: ^6.0.0
   agora_rtc_engine: ^6.5.3
   record: ^6.1.2
@@ -69,6 +69,8 @@ dependencies:
   firebase_database: ^11.3.10
   agora_rtm: ^2.2.5
   enhanced_paginated_view: ^2.0.3
+  firebase_messaging: ^15.2.10
+
 
 
 
