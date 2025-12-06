@@ -83,13 +83,16 @@ class AppImages {
   static const String editProfileIcon = "Assets/Images/edit_profile_icon.png";
   static const String settingsIcon = "Assets/Images/settings_icon.png";
   static const String callBg = "Assets/Images/call_bg.png";
+  static const String videoOnIcon = "Assets/Images/video_on.png";
+  static const String videoOffIcon = "Assets/Images/video_off.png";
 
   static const String recIcon = "Assets/Images/rec_icon.png";
   static const String acceptCallIcon = "Assets/Images/accept_call_icon.png";
   static const String endCallIcon = "Assets/Images/end_call_icon.png";
   static const String micOffIcon = "Assets/Images/mic_off_icon.png";
+  static const String micOnIcon = "Assets/Images/mic_blue_icon.png";
   static const String speakerOnIcon = "Assets/Images/speaker_on_icon.png";
-
+  static const String speakerOffIcon = "Assets/Images/speaker_off_image1.png";
   static const String eightPlusIcon = "Assets/Images/18+.png";
   static const String aboutUsSettings =
       "Assets/Images/about_us_settings_icon.png";

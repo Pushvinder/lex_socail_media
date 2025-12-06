@@ -70,4 +70,6 @@ class ApiUtils {
   static const String createCall = 'create_call';
   static const String endCall = 'end_call';
   static const String getCallHistory = 'get_call_history';
+  static const String responseCall = 'response_call';
+  static const String uploadSmsFiles = 'upload_sms_files';
 }

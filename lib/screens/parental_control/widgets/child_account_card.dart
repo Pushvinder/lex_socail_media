@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:the_friendz_zone/screens/child_user_profile/child_user_profile_screen.dart';
 import '../../../config/app_config.dart';
 import '../../../utils/app_cache_manager.dart';
+import '../../user_profile/user_profile_screen.dart';
 import '../models/child_account_model.dart';
 
 class ChildAccountCard extends StatelessWidget {
@@ -37,7 +38,10 @@ class ChildAccountCard extends StatelessWidget {
               // Avatar
               GestureDetector(
                 onTap: () {
-                  Get.to(() => ChildUserProfileScreen());
+                  // Get.to(() => ChildUserProfileScreen());
+                  Get.to(() => UserProfileScreen(
+                    userId: childAccount.id ?? '',
+                  ));
                 },
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(100),

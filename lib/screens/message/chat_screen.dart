@@ -210,7 +210,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: GestureDetector(
                     onTap: () {
                       Get.to(
-                            () => AudioCallScreen(
+                            () => CallScreen(
                           userName: widget.userName,
                           userAvatar: widget.userAvatar,
                           receiverId: widget.otherUserId,
@@ -231,7 +231,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: GestureDetector(
                     onTap: () {
                       Get.to(
-                            () => AudioCallScreen(
+                            () => CallScreen(
                           userName: widget.userName,
                           userAvatar: widget.userAvatar,
                           receiverId: widget.otherUserId,

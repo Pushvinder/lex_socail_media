@@ -535,6 +535,11 @@ import '../../../config/app_config.dart';
 //   }
 // }
 
+import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../../../config/app_config.dart';
 
 class ActivityCard_PostLiked extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -542,6 +547,7 @@ class ActivityCard_PostLiked extends StatelessWidget {
     required this.data,
     super.key,
   });
+
   @override
   Widget build(BuildContext context) {
     return CardBase(
@@ -619,9 +625,8 @@ class ActivityCard_PostLiked extends StatelessWidget {
             ),
           ),
           SizedBox(height: 8),
-          // Image + likes with fixed height
           SizedBox(
-            height: 140, // Fixed height for image
+            height: 140,
             child: Stack(
               children: [
                 ClipRRect(
@@ -652,7 +657,7 @@ class ActivityCard_PostLiked extends StatelessWidget {
                       filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
                       child: Container(
                         padding:
-                            EdgeInsets.symmetric(horizontal: 7, vertical: 2.2),
+                        EdgeInsets.symmetric(horizontal: 7, vertical: 2.2),
                         decoration: BoxDecoration(
                           color: AppColors.scaffoldBackgroundColor
                               .withOpacity(0.5),
@@ -697,6 +702,7 @@ class ActivityCard_PostLiked extends StatelessWidget {
 class ActivityCard_Comment extends StatelessWidget {
   final Map<String, dynamic> data;
   const ActivityCard_Comment({required this.data, super.key});
+
   @override
   Widget build(BuildContext context) {
     return CardBase(
@@ -765,24 +771,34 @@ class ActivityCard_Comment extends StatelessWidget {
           ),
           SizedBox(height: 12),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                data['time'] ?? '',
-                style: TextStyle(
-                  fontFamily: GoogleFonts.inter().fontFamily,
-                  color: AppColors.textColor4.withOpacity(1),
-                  fontWeight: FontWeight.w500,
-                  fontSize: FontDimen.dimen10,
+              Flexible(
+                child: Text(
+                  data['time'] ?? '',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: GoogleFonts.inter().fontFamily,
+                    color: AppColors.textColor4.withOpacity(1),
+                    fontWeight: FontWeight.w500,
+                    fontSize: FontDimen.dimen10,
+                  ),
                 ),
               ),
-              Spacer(),
-              Text(
-                data['date'] ?? '',
-                style: TextStyle(
-                  fontFamily: GoogleFonts.inter().fontFamily,
-                  color: AppColors.textColor4.withOpacity(1),
-                  fontWeight: FontWeight.w500,
-                  fontSize: FontDimen.dimen10,
+              SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  data['date'] ?? '',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                    fontFamily: GoogleFonts.inter().fontFamily,
+                    color: AppColors.textColor4.withOpacity(1),
+                    fontWeight: FontWeight.w500,
+                    fontSize: FontDimen.dimen10,
+                  ),
                 ),
               ),
             ],
@@ -796,6 +812,7 @@ class ActivityCard_Comment extends StatelessWidget {
 class ActivityCard_Chat extends StatelessWidget {
   final Map<String, dynamic> data;
   const ActivityCard_Chat({required this.data, super.key});
+
   @override
   Widget build(BuildContext context) {
     return CardBase(
@@ -868,24 +885,34 @@ class ActivityCard_Chat extends StatelessWidget {
           ),
           SizedBox(height: 12),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                data['time'] ?? '',
-                style: TextStyle(
-                  fontFamily: GoogleFonts.inter().fontFamily,
-                  color: AppColors.textColor4.withOpacity(1),
-                  fontWeight: FontWeight.w500,
-                  fontSize: FontDimen.dimen10,
+              Flexible(
+                child: Text(
+                  data['time'] ?? '',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: GoogleFonts.inter().fontFamily,
+                    color: AppColors.textColor4.withOpacity(1),
+                    fontWeight: FontWeight.w500,
+                    fontSize: FontDimen.dimen10,
+                  ),
                 ),
               ),
-              Spacer(),
-              Text(
-                data['date'] ?? '',
-                style: TextStyle(
-                  fontFamily: GoogleFonts.inter().fontFamily,
-                  color: AppColors.textColor4.withOpacity(1),
-                  fontWeight: FontWeight.w500,
-                  fontSize: FontDimen.dimen10,
+              SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  data['date'] ?? '',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                    fontFamily: GoogleFonts.inter().fontFamily,
+                    color: AppColors.textColor4.withOpacity(1),
+                    fontWeight: FontWeight.w500,
+                    fontSize: FontDimen.dimen10,
+                  ),
                 ),
               ),
             ],
@@ -899,6 +926,7 @@ class ActivityCard_Chat extends StatelessWidget {
 class ActivityCard_Request extends StatelessWidget {
   final Map<String, dynamic> data;
   const ActivityCard_Request({required this.data, super.key});
+
   @override
   Widget build(BuildContext context) {
     return CardBase(
@@ -947,6 +975,7 @@ class ActivityCard_Request extends StatelessWidget {
             ),
           ),
           SizedBox(height: 12),
+          // Decline Button
           GestureDetector(
             onTap: () {
               // Handle decline action
@@ -965,6 +994,8 @@ class ActivityCard_Request extends StatelessWidget {
               child: Center(
                 child: Text(
                   AppStrings.decline,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: AppColors.textColor3.withOpacity(0.70),
                     fontWeight: FontWeight.w500,
@@ -976,6 +1007,7 @@ class ActivityCard_Request extends StatelessWidget {
             ),
           ),
           SizedBox(height: 8),
+          // Accept Button
           GestureDetector(
             onTap: () {
               // Handle accept action
@@ -994,6 +1026,8 @@ class ActivityCard_Request extends StatelessWidget {
               child: Center(
                 child: Text(
                   AppStrings.accept,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: AppColors.textColor3.withOpacity(1),
                     fontWeight: FontWeight.w500,
@@ -1005,25 +1039,36 @@ class ActivityCard_Request extends StatelessWidget {
             ),
           ),
           SizedBox(height: 12),
+          // Time and Date Row with flexible layout
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                data['time'] ?? '',
-                style: TextStyle(
-                  fontFamily: GoogleFonts.inter().fontFamily,
-                  color: AppColors.textColor4.withOpacity(1),
-                  fontWeight: FontWeight.w500,
-                  fontSize: FontDimen.dimen10,
+              Flexible(
+                child: Text(
+                  data['time'] ?? '',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: GoogleFonts.inter().fontFamily,
+                    color: AppColors.textColor4.withOpacity(1),
+                    fontWeight: FontWeight.w500,
+                    fontSize: FontDimen.dimen10,
+                  ),
                 ),
               ),
-              Spacer(),
-              Text(
-                data['date'] ?? '',
-                style: TextStyle(
-                  fontFamily: GoogleFonts.inter().fontFamily,
-                  color: AppColors.textColor4.withOpacity(1),
-                  fontWeight: FontWeight.w500,
-                  fontSize: FontDimen.dimen10,
+              SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  data['date'] ?? '',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                    fontFamily: GoogleFonts.inter().fontFamily,
+                    color: AppColors.textColor4.withOpacity(1),
+                    fontWeight: FontWeight.w500,
+                    fontSize: FontDimen.dimen10,
+                  ),
                 ),
               ),
             ],
@@ -1056,18 +1101,21 @@ class CardBase extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(16, 10, 16, 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min, // Important for flexible height
+        mainAxisSize: MainAxisSize.min,
         children: [
-          // Title with icon image
           Row(
             children: [
-              Text(
-                title,
-                style: TextStyle(
-                  color: AppColors.viewProfileBg,
-                  fontFamily: GoogleFonts.inter().fontFamily,
-                  fontWeight: FontWeight.bold,
-                  fontSize: FontDimen.dimen11,
+              Flexible(
+                child: Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: AppColors.viewProfileBg,
+                    fontFamily: GoogleFonts.inter().fontFamily,
+                    fontWeight: FontWeight.bold,
+                    fontSize: FontDimen.dimen11,
+                  ),
                 ),
               ),
               SizedBox(width: 4),
@@ -1079,13 +1127,12 @@ class CardBase extends StatelessWidget {
               ),
             ],
           ),
-          // Divider
           Divider(
             color: AppColors.textColor4.withOpacity(1),
             thickness: 1,
           ),
           SizedBox(height: 4),
-          child, // Remove Expanded wrapper
+          child,
         ],
       ),
     );

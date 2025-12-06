@@ -483,7 +483,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                 otherUserId: widget.userId,
                                                 userAvatar: _userProfileController.user.data?.profile ?? '',
                                                 isOnline: false,
-                                                chatId: existingChatId, // ✅ Pass existing chat ID
+                                                chatId: existingChatId.toString(), // ✅ Pass existing chat ID
                                               ),
                                             );
                                           },
@@ -577,7 +577,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                 otherUserId: widget.userId,
                                                 userAvatar: _userProfileController.user.data?.profile ?? '',
                                                 isOnline: false,
-                                                chatId: existingChatId, // ✅ Pass existing chat ID
+                                                chatId: existingChatId.toString(), // ✅ Pass existing chat ID
                                               ),
                                             );
                                           },
@@ -667,7 +667,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                                 otherUserId: widget.userId,
                                                 userAvatar: _userProfileController.user.data?.profile ?? '',
                                                 isOnline: false,
-                                                chatId: existingChatId, // ✅ Pass existing chat ID
+                                                chatId: existingChatId.toString(), // ✅ Pass existing chat ID
                                               ),
                                             );
                                           },

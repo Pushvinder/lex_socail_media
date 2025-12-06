@@ -18,10 +18,11 @@ enum LanguageCode {
   zh,
 }
 
-// ✅ UPDATED: Added more notification types for social media
+// ✅ UPDATED: Added call notification type
 enum NotificationType {
   message,
   call,
+  incomingCall, // ✅ Added for incoming calls
   friendRequest,
   friendAccepted,
   like,
@@ -135,37 +136,272 @@ enum MenuState {
   coachHome,
 }
 
-// ✅ NEW: Extension for NotificationType
+// ✅ NEW: Call State Enum
+enum CallState {
+  idle,
+  calling,
+  ringing,
+  connected,
+  ended,
+  missed,
+  rejected,
+  busy,
+  failed,
+}
+
+// ✅ NEW: Call Type Enum
+enum CallType {
+  audio,
+  video,
+}
+
+// ✅ NEW: Call Direction Enum
+enum CallDirection {
+  incoming,
+  outgoing,
+}
+
+// ✅ UPDATED: Extension for NotificationType
 extension NotificationTypeExtension on NotificationType {
   String get value {
     return 'NotificationType.$name';
   }
 
   static NotificationType fromString(String value) {
-    switch (value) {
-      case 'NotificationType.message':
+    // Remove 'NotificationType.' prefix if present
+    final cleanValue = value.replaceFirst('NotificationType.', '');
+
+    switch (cleanValue.toLowerCase()) {
+      case 'message':
         return NotificationType.message;
-      case 'NotificationType.call':
-        return NotificationType.call;
-      case 'NotificationType.friendRequest':
+      case 'call':
+      case 'incoming_call':
+      case 'incomingcall':
+        return NotificationType.incomingCall;
+      case 'friendrequest':
+      case 'friend_request':
         return NotificationType.friendRequest;
-      case 'NotificationType.friendAccepted':
+      case 'friendaccepted':
+      case 'friend_accepted':
         return NotificationType.friendAccepted;
-      case 'NotificationType.like':
+      case 'like':
         return NotificationType.like;
-      case 'NotificationType.comment':
+      case 'comment':
         return NotificationType.comment;
-      case 'NotificationType.mention':
+      case 'mention':
         return NotificationType.mention;
-      case 'NotificationType.follow':
+      case 'follow':
         return NotificationType.follow;
-      case 'NotificationType.post':
+      case 'post':
         return NotificationType.post;
-      case 'NotificationType.groupInvite':
+      case 'groupinvite':
+      case 'group_invite':
         return NotificationType.groupInvite;
-      case 'NotificationType.general':
+      case 'general':
       default:
         return NotificationType.general;
+    }
+  }
+
+  // ✅ Helper to convert to backend format
+  String toBackendString() {
+    switch (this) {
+      case NotificationType.message:
+        return 'message';
+      case NotificationType.call:
+      case NotificationType.incomingCall:
+        return 'incoming_call';
+      case NotificationType.friendRequest:
+        return 'friend_request';
+      case NotificationType.friendAccepted:
+        return 'friend_accepted';
+      case NotificationType.like:
+        return 'like';
+      case NotificationType.comment:
+        return 'comment';
+      case NotificationType.mention:
+        return 'mention';
+      case NotificationType.follow:
+        return 'follow';
+      case NotificationType.post:
+        return 'post';
+      case NotificationType.groupInvite:
+        return 'group_invite';
+      case NotificationType.general:
+        return 'general';
+    }
+  }
+}
+
+// ✅ NEW: Extension for CallState
+extension CallStateExtension on CallState {
+  String get value {
+    return 'CallState.$name';
+  }
+
+  static CallState fromString(String value) {
+    final cleanValue = value.replaceFirst('CallState.', '');
+
+    switch (cleanValue.toLowerCase()) {
+      case 'idle':
+        return CallState.idle;
+      case 'calling':
+        return CallState.calling;
+      case 'ringing':
+        return CallState.ringing;
+      case 'connected':
+        return CallState.connected;
+      case 'ended':
+        return CallState.ended;
+      case 'missed':
+        return CallState.missed;
+      case 'rejected':
+        return CallState.rejected;
+      case 'busy':
+        return CallState.busy;
+      case 'failed':
+        return CallState.failed;
+      default:
+        return CallState.idle;
+    }
+  }
+
+  // ✅ Check if call is active
+  bool get isActive {
+    return this == CallState.calling ||
+        this == CallState.ringing ||
+        this == CallState.connected;
+  }
+
+  // ✅ Check if call ended
+  bool get isEnded {
+    return this == CallState.ended ||
+        this == CallState.missed ||
+        this == CallState.rejected ||
+        this == CallState.failed;
+  }
+
+  // ✅ Get display text
+  String get displayText {
+    switch (this) {
+      case CallState.idle:
+        return 'Idle';
+      case CallState.calling:
+        return 'Calling...';
+      case CallState.ringing:
+        return 'Incoming Call';
+      case CallState.connected:
+        return 'Connected';
+      case CallState.ended:
+        return 'Call Ended';
+      case CallState.missed:
+        return 'Missed Call';
+      case CallState.rejected:
+        return 'Call Rejected';
+      case CallState.busy:
+        return 'User Busy';
+      case CallState.failed:
+        return 'Call Failed';
+    }
+  }
+}
+
+// ✅ NEW: Extension for CallType
+extension CallTypeExtension on CallType {
+  String get value {
+    return 'CallType.$name';
+  }
+
+  static CallType fromString(String value) {
+    final cleanValue = value.replaceFirst('CallType.', '');
+
+    switch (cleanValue.toLowerCase()) {
+      case 'audio':
+        return CallType.audio;
+      case 'video':
+        return CallType.video;
+      default:
+        return CallType.audio;
+    }
+  }
+
+  // ✅ Convert to backend format
+  String toBackendString() {
+    switch (this) {
+      case CallType.audio:
+        return 'audio';
+      case CallType.video:
+        return 'video';
+    }
+  }
+
+  // ✅ Get display text
+  String get displayText {
+    switch (this) {
+      case CallType.audio:
+        return 'Audio Call';
+      case CallType.video:
+        return 'Video Call';
+    }
+  }
+
+  // ✅ Get icon name
+  String get iconName {
+    switch (this) {
+      case CallType.audio:
+        return 'call_icon';
+      case CallType.video:
+        return 'video_icon';
+    }
+  }
+}
+
+// ✅ NEW: Extension for CallDirection
+extension CallDirectionExtension on CallDirection {
+  String get value {
+    return 'CallDirection.$name';
+  }
+
+  static CallDirection fromString(String value) {
+    final cleanValue = value.replaceFirst('CallDirection.', '');
+
+    switch (cleanValue.toLowerCase()) {
+      case 'incoming':
+        return CallDirection.incoming;
+      case 'outgoing':
+        return CallDirection.outgoing;
+      default:
+        return CallDirection.outgoing;
+    }
+  }
+
+  // ✅ Convert to backend format
+  String toBackendString() {
+    switch (this) {
+      case CallDirection.incoming:
+        return 'incoming';
+      case CallDirection.outgoing:
+        return 'outgoing';
+    }
+  }
+
+  // ✅ Get display text
+  String get displayText {
+    switch (this) {
+      case CallDirection.incoming:
+        return 'Incoming';
+      case CallDirection.outgoing:
+        return 'Outgoing';
+    }
+  }
+
+  // ✅ Get icon rotation (for call history UI)
+  double get iconRotation {
+    switch (this) {
+      case CallDirection.incoming:
+        return 0.0; // Arrow pointing down
+      case CallDirection.outgoing:
+        return 180.0; // Arrow pointing up
     }
   }
 }

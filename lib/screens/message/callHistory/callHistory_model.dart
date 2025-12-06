@@ -114,4 +114,7 @@ class CallHistoryModel {
 
   // Check if it's a video call
   bool get isVideoCall => callType == 'video';
+
+  bool get isAudioCall => callType == 'audio';
+
 }

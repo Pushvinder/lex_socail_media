@@ -110,6 +110,7 @@ class ApiManager {
     List<String>? filePaths, // Optional: path to the file
     Map<String, List<String>?>?
         multipartFile, // add aditional file key or data if neccessary or needed
+    bool isFormData = true, // Flag to indicate if the request is form data
   }) async {
     await setAuthToken(); // This fetches the token and sets it in predefinedHeaders
 
@@ -218,6 +219,98 @@ class ApiManager {
       throw AppStrings.checkConnection;
     }
   }
+
+  static Future<Map<String, dynamic>> smsFileUploadCallPostWithFormData({
+    required Map<String, dynamic> body,
+    required String endPoint,
+    Map<String, String>? headers,
+    String? fileKey,             // example: file[]
+    List<String>? filePaths,     // list of file paths
+    Map<String, List<String>?>? multipartFile,
+    bool isFormData = true,
+  }) async {
+    await setAuthToken();
+
+    bool isNet = await AppFunctions.checkInternet();
+    if (!isNet) throw AppStrings.checkConnection;
+
+    try {
+      Map<String, dynamic> finalresponse;
+
+      Uri url = Uri.parse(ApiUtils.baseUrl);
+
+      var request = http.MultipartRequest('POST', url);
+
+      // Required "request" field for backend
+      request.fields['request'] = endPoint;
+
+      // Add normal fields
+      body.forEach((key, value) {
+        if (value is List) {
+          // send JSON list for array fields
+          request.fields[key] = jsonEncode(value);
+        } else {
+          request.fields[key] = value.toString();
+        }
+      });
+
+      debugPrint('Outgoing FormData Fields: ${request.fields}');
+
+      // Merge headers
+      Map<String, String> mergedHeaders = mergeHeaders(headers);
+      request.headers.addAll(mergedHeaders);
+
+      // MAIN FIX — Attach files correctly
+      if (fileKey != null && filePaths != null && filePaths.isNotEmpty) {
+        for (String path in filePaths) {
+          if (path.trim().isEmpty) continue;
+
+          final file = await http.MultipartFile.fromPath(fileKey, path);
+          request.files.add(file);
+        }
+      }
+
+      // Additional file fields support
+      if (multipartFile != null) {
+        for (var entry in multipartFile.entries) {
+          final key = entry.key;
+          final paths = entry.value;
+
+          if (paths != null && paths.isNotEmpty) {
+            for (var path in paths) {
+              if (path.trim().isEmpty) continue;
+
+              final file = await http.MultipartFile.fromPath(key, path);
+              request.files.add(file);
+            }
+          } else {
+            request.files.add(
+                http.MultipartFile.fromString(key, '', filename: 'empty.txt'));
+          }
+        }
+      }
+
+      // Send request
+      var response = await request.send();
+      final respStr = await response.stream.bytesToString();
+
+      log('API == $endPoint , Request = ${request.fields} , Response == $respStr');
+
+      final responseJson = json.decode(respStr);
+      checkTokenValidity(responseJson);
+
+      finalresponse = responseJson;
+
+      return finalresponse;
+
+    } on SocketException {
+      throw AppStrings.checkConnection;
+    } catch (e) {
+      debugPrint('error api manager $e');
+      throw ErrorMessages.somethingWrong;
+    }
+  }
+
 }
 
 void checkTokenValidity(Map<String, dynamic> response) {

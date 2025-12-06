@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../config/app_colors.dart';
 import '../../../config/app_config.dart' hide AppColors;
 import '../../../utils/app_dimen.dart';
+import '../../audio_call/audio_call_screen.dart';
 import 'callHistory_model.dart';
 
 class CallHistoryTile extends StatelessWidget {
@@ -151,21 +152,33 @@ class CallHistoryTile extends StatelessWidget {
             ),
 
             // Right side - Call type icon (video/audio)
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: call.isVideoCall
-                    ? AppColors.primaryColor.withOpacity(0.1)
-                    : AppColors.primaryColorShade.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(
-                call.isVideoCall ? Icons.videocam : Icons.call,
-                color: call.isVideoCall
-                    ? AppColors.primaryColor
-                    : AppColors.primaryColorShade,
-                size: 20,
+            GestureDetector(
+              onTap: () {
+                Get.to(
+                      () => CallScreen(
+                    userName: participantName,
+                    userAvatar: participantProfile,
+                    receiverId: call.getOtherParticipantId(currentUserId),
+                    isVideo: call.isVideoCall,
+                  ),
+                );
+              },
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: call.isVideoCall
+                      ? AppColors.primaryColor.withOpacity(0.1)
+                      : AppColors.primaryColorShade.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  call.isVideoCall ? Icons.videocam : Icons.call,
+                  color: call.isVideoCall
+                      ? AppColors.primaryColor
+                      : AppColors.primaryColorShade,
+                  size: 20,
+                ),
               ),
             ),
           ],

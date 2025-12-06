@@ -1,4 +1,3 @@
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +6,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:the_friendz_zone/config/app_config.dart';
 import 'package:the_friendz_zone/screens/message/chat_controller.dart';
 import 'package:the_friendz_zone/screens/message/models/message_model.dart';
+import 'package:the_friendz_zone/screens/message/widgets/video_player_screen.dart';
 import 'package:the_friendz_zone/utils/app_dimen.dart';
-import 'package:the_friendz_zone/utils/app_fonts.dart';
+
+import 'full_screen_image_viewer.dart';
+
 
 class ChatBubble extends StatefulWidget {
   final Message message;
@@ -405,29 +407,40 @@ class _ChatBubbleState extends State<ChatBubble> {
     }
 
     Widget bubbleContent;
-    
+
     if (widget.message.type == 'image') {
-      // Image message
       bubbleContent = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(AppDimens.dimen8),
-            child: CachedNetworkImage(
-              imageUrl: widget.message.mediaUrl ?? '',
-              width: 200,
-              height: 150,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => Container(
-                width: 200,
-                height: 150,
-                color: AppColors.greyShadeColor,
-              ),
-              errorWidget: (context, url, error) => Container(
-                width: 200,
-                height: 150,
-                color: AppColors.greyShadeColor,
-                child: Icon(Icons.broken_image, color: AppColors.greyColor),
+          GestureDetector(
+            onTap: () {
+              Get.to(() => FullScreenImageViewer(
+                    images: [widget.message.mediaUrl!], // <-- NEW
+                    initialIndex: 0, // <-- NEW
+                    heroTag: widget.message.mediaUrl, // Optional hero tag
+                  ));
+            },
+            child: Hero(
+              tag: widget.message.mediaUrl ?? "",
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(AppDimens.dimen8),
+                child: CachedNetworkImage(
+                  imageUrl: widget.message.mediaUrl ?? '',
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                  placeholder: (_, __) => Container(
+                    width: 100,
+                    height: 100,
+                    color: AppColors.greyShadeColor,
+                  ),
+                  errorWidget: (_, __, ___) => Container(
+                    width: 100,
+                    height: 100,
+                    color: AppColors.greyShadeColor,
+                    child: Icon(Icons.broken_image, color: AppColors.greyColor),
+                  ),
+                ),
               ),
             ),
           ),
@@ -443,6 +456,52 @@ class _ChatBubbleState extends State<ChatBubble> {
             ),
           ],
         ],
+      );
+    } else if (widget.message.type == 'video') {
+      // Video thumbnail preview
+      bubbleContent = GestureDetector(
+        onTap: () {
+          Get.to(() => VideoPlayerScreen(videoUrl: widget.message.mediaUrl!));
+        },
+        child: Stack(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(AppDimens.dimen10),
+              child: CachedNetworkImage(
+                imageUrl: widget.message.mediaUrl ?? '',
+                width: 160,
+                height: 120,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Container(
+                  width: 160,
+                  height: 120,
+                  color: AppColors.greyShadeColor,
+                ),
+                errorWidget: (context, url, error) => Container(
+                  width: 160,
+                  height: 120,
+                  color: AppColors.greyShadeColor,
+                  child: Icon(Icons.videocam_off, color: Colors.white),
+                ),
+              ),
+            ),
+
+            // Play Icon Overlay
+            Positioned.fill(
+              child: Center(
+                child: Container(
+                  width: 45,
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: Colors.black45,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.play_arrow, color: Colors.white, size: 30),
+                ),
+              ),
+            )
+          ],
+        ),
       );
     } else if (widget.message.type == 'file') {
       // File message

@@ -174,6 +174,134 @@
 
 // }
 
+//
+// import 'package:get/get.dart';
+// import 'package:intl/intl.dart';
+// import 'package:the_friendz_zone/api_helpers/api_param.dart';
+// import 'package:the_friendz_zone/screens/profile/models/user_post_list_response.dart';
+// import 'package:the_friendz_zone/screens/profile/models/user_response.dart';
+// import 'package:the_friendz_zone/utils/app_loader.dart';
+// import 'package:video_player/video_player.dart';
+// import '../../config/app_config.dart';
+//
+// class ProfileController extends GetxController {
+//
+//   Rx<UserResponse> user = UserResponse().obs;
+//
+//   RxBool isLoading = true.obs; // << used for displaying loader
+//   RxBool isPhotosTab = true.obs;
+//
+//   RxList<PostImages> imagePostList = <PostImages>[].obs;
+//   RxList<PostVideos> videoPostList = <PostVideos>[].obs;
+//
+//   RxList<VideoPlayerController?> videoControllers = <VideoPlayerController?>[].obs;
+//   RxList<bool> isVideoInitialized = <bool>[].obs;
+//   RxList<bool> isVideoError = <bool>[].obs;
+//
+//   @override
+//   void onInit() {
+//     super.onInit();
+//     getProfileDetails();
+//     _getPostDetails();
+//   }
+//
+//   /// ======================= PROFILE API =======================
+//   Future<void> getProfileDetails() async {
+//     try {
+//       int userId = StorageHelper().getUserId;
+//
+//       var result = await ApiManager.callPostWithFormData(
+//         body: {ApiParam.id: "$userId"},
+//         endPoint: ApiUtils.getProfileDetail,
+//       );
+//
+//       UserResponse res = UserResponse.fromJson(result);
+//
+//       if (res.data != null) {
+//         user.value = res;
+//       }
+//
+//     } catch (e) {
+//       debugPrint("⚠ Profile API Error: $e");
+//     } finally {
+//       isLoading.value = false; // loader will stop
+//     }
+//   }
+//
+//   /// ======================= POSTS API =======================
+//   Future<void> _getPostDetails() async {
+//     try {
+//       int userId = StorageHelper().getUserId;
+//
+//       var response = await ApiManager.callPostWithFormData(
+//         body: {ApiParam.id: "$userId"},
+//         endPoint: ApiUtils.getAllPostDetails,
+//       );
+//
+//       var res = UserPostListResponse.fromJson(response);
+//
+//       if (res.status == true) {
+//         imagePostList.value = res.data?.postImages ?? [];
+//         videoPostList.value = res.data?.postVideos ?? [];
+//
+//         if (videoPostList.isNotEmpty) _initVideoControllers();
+//       }
+//     } catch (e) {
+//       debugPrint("⚠ Post List Error: $e");
+//     }
+//   }
+//
+//   /// ================== VIDEO CONTROLLERS ==================
+//   void _initVideoControllers() {
+//     disposeVideoControllers();
+//
+//     int count = videoPostList.length;
+//     videoControllers.value = List.generate(count, (_) => null);
+//     isVideoInitialized.value = List.generate(count, (_) => false);
+//     isVideoError.value = List.generate(count, (_) => false);
+//
+//     for (int i = 0; i < count; i++) {
+//       String url = videoPostList[i].video ?? "";
+//       Uri? uri = Uri.tryParse(url);
+//
+//       if (uri != null && uri.isAbsolute) {
+//         final controller = VideoPlayerController.networkUrl(uri);
+//         videoControllers[i] = controller;
+//
+//         controller.initialize().then((_) {
+//           isVideoInitialized[i] = true;
+//           controller.setLooping(true);
+//         }).catchError((_) => isVideoError[i] = true);
+//
+//       } else {
+//         isVideoError[i] = true;
+//       }
+//     }
+//   }
+//
+//   void disposeVideoControllers() {
+//     for (var c in videoControllers) {
+//       c?.dispose();
+//     }
+//     videoControllers.clear();
+//     isVideoInitialized.clear();
+//     isVideoError.clear();
+//   }
+//
+//   /// ================== AGE CALCULATOR ==================
+//   int calculateAge(String dobString) {
+//     DateTime dob = DateFormat("dd-MM-yyyy").parse(dobString);
+//     DateTime now = DateTime.now();
+//     int age = now.year - dob.year;
+//
+//     if (now.month < dob.month || (now.month == dob.month && now.day < dob.day)) {
+//       age--;
+//     }
+//     return age;
+//   }
+// }
+
+
 
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -188,21 +316,27 @@ class ProfileController extends GetxController {
 
   Rx<UserResponse> user = UserResponse().obs;
 
-  RxBool isLoading = true.obs; // << used for displaying loader
+  RxBool isLoading = true.obs;
   RxBool isPhotosTab = true.obs;
 
   RxList<PostImages> imagePostList = <PostImages>[].obs;
   RxList<PostVideos> videoPostList = <PostVideos>[].obs;
 
-  RxList<VideoPlayerController?> videoControllers = <VideoPlayerController?>[].obs;
-  RxList<bool> isVideoInitialized = <bool>[].obs;
-  RxList<bool> isVideoError = <bool>[].obs;
+  RxMap<int, VideoPlayerController> videoControllers = <int, VideoPlayerController>{}.obs;
+  RxMap<int, bool> isVideoInitialized = <int, bool>{}.obs;
+  RxMap<int, bool> isVideoError = <int, bool>{}.obs;
 
   @override
   void onInit() {
     super.onInit();
     getProfileDetails();
     _getPostDetails();
+  }
+
+  @override
+  void onClose() {
+    disposeVideoControllers();
+    super.onClose();
   }
 
   /// ======================= PROFILE API =======================
@@ -224,7 +358,7 @@ class ProfileController extends GetxController {
     } catch (e) {
       debugPrint("⚠ Profile API Error: $e");
     } finally {
-      isLoading.value = false; // loader will stop
+      isLoading.value = false;
     }
   }
 
@@ -255,24 +389,23 @@ class ProfileController extends GetxController {
   void _initVideoControllers() {
     disposeVideoControllers();
 
-    int count = videoPostList.length;
-    videoControllers.value = List.generate(count, (_) => null);
-    isVideoInitialized.value = List.generate(count, (_) => false);
-    isVideoError.value = List.generate(count, (_) => false);
-
-    for (int i = 0; i < count; i++) {
+    for (int i = 0; i < videoPostList.length; i++) {
       String url = videoPostList[i].video ?? "";
       Uri? uri = Uri.tryParse(url);
 
       if (uri != null && uri.isAbsolute) {
         final controller = VideoPlayerController.networkUrl(uri);
         videoControllers[i] = controller;
+        isVideoInitialized[i] = false;
+        isVideoError[i] = false;
 
         controller.initialize().then((_) {
           isVideoInitialized[i] = true;
-          controller.setLooping(true);
-        }).catchError((_) => isVideoError[i] = true);
-
+          isVideoInitialized.refresh();
+        }).catchError((_) {
+          isVideoError[i] = true;
+          isVideoError.refresh();
+        });
       } else {
         isVideoError[i] = true;
       }
@@ -280,23 +413,40 @@ class ProfileController extends GetxController {
   }
 
   void disposeVideoControllers() {
-    for (var c in videoControllers) {
-      c?.dispose();
-    }
+    videoControllers.forEach((key, controller) {
+      controller.dispose();
+    });
     videoControllers.clear();
     isVideoInitialized.clear();
     isVideoError.clear();
   }
 
+  /// ================== VIDEO HELPER ==================
+  VideoPlayerController? getVideoController(int index) {
+    return videoControllers[index];
+  }
+
+  bool isVideoReady(int index) {
+    return isVideoInitialized[index] == true;
+  }
+
+  bool hasVideoError(int index) {
+    return isVideoError[index] == true;
+  }
+
   /// ================== AGE CALCULATOR ==================
   int calculateAge(String dobString) {
-    DateTime dob = DateFormat("dd-MM-yyyy").parse(dobString);
-    DateTime now = DateTime.now();
-    int age = now.year - dob.year;
+    try {
+      DateTime dob = DateFormat("dd-MM-yyyy").parse(dobString);
+      DateTime now = DateTime.now();
+      int age = now.year - dob.year;
 
-    if (now.month < dob.month || (now.month == dob.month && now.day < dob.day)) {
-      age--;
+      if (now.month < dob.month || (now.month == dob.month && now.day < dob.day)) {
+        age--;
+      }
+      return age;
+    } catch (e) {
+      return 18; // Default age
     }
-    return age;
   }
 }
